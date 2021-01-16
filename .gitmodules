@@ -1,0 +1,3 @@
+[submodule "AirplaneLite"]
+	path = AirplaneLite
+	url = https://github.com/Technove/AirplaneLite.git
