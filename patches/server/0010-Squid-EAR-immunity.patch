@@ -1,0 +1,32 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Mon, 13 Jul 2020 13:49:41 -0500
+Subject: [PATCH] Squid EAR immunity
+
+
+diff --git a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
+index 6e97c5342b31c6bd0b59dc355bbf12e1882787da..926e9c0d719dba0320b83854b50de975e879359e 100644
+--- a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
++++ b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
+@@ -63,4 +63,9 @@ public class PurpurWorldConfig {
+         villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
+         villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
+     }
++
++    public boolean squidImmuneToEAR = true;
++    private void squidSettings() {
++        squidImmuneToEAR = getBoolean("mobs.squid.immune-to-EAR", squidImmuneToEAR);
++    }
+ }
+diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
+index 0b93635ba59df4eb4456a97c5e9b51ab5aeda53f..86825f172d90b497102fea5cc525e4dee9ac7a2e 100644
+--- a/src/main/java/org/spigotmc/ActivationRange.java
++++ b/src/main/java/org/spigotmc/ActivationRange.java
+@@ -377,6 +377,7 @@ public class ActivationRange
+      */
+     public static boolean checkIfActive(Entity entity)
+     {
++        if (entity.world.purpurConfig.squidImmuneToEAR && entity instanceof net.minecraft.server.EntitySquid) return true; // Purpur
+         // Never safe to skip fireworks or entities not yet added to chunk
+         if ( !entity.inChunk || entity instanceof EntityFireworks ) {
+             return true;
