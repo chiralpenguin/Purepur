@@ -311,7 +311,7 @@ index 9f5ce64a60fe7c312399ee416b11b84213dd3bee..daeea23eab54d6951217516d28003063
              Entity entity1 = this.getShooter();
              // Paper start - Cancel hit for vanished players
 diff --git a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-index 926e9c0d719dba0320b83854b50de975e879359e..2d250c420353d176b92d2087b797f38a219b3541 100644
+index 508366e37d23c873aa741c5415027485c0ab4588..61393377acac66d06c34f07b3193bff58ac281e2 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
 +++ b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
 @@ -57,6 +57,35 @@ public class PurpurWorldConfig {
@@ -348,5 +348,5 @@ index 926e9c0d719dba0320b83854b50de975e879359e..2d250c420353d176b92d2087b797f38a
 +    }
 +
      public int villagerBrainTicks = 1;
-     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
-     private void villagerSettings() {
+     public boolean villagerLobotomizeEnabled = false;
+     public int villagerLobotomizeCheck = 60;
