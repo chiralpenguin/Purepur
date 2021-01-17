@@ -5,7 +5,7 @@ Subject: [PATCH] Lagging threshold
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 0945e9cf8a37868beb9ea13e7b889aae827b4662..3ac30bbf7ad327372b02ed365572fd3226fb6f9a 100644
+index 90556fca9315e71c4f3fbd231ac6d765677ca271..e12fecf47798f638b85e7c6d54055a526097811c 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -163,6 +163,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
@@ -16,7 +16,7 @@ index 0945e9cf8a37868beb9ea13e7b889aae827b4662..3ac30bbf7ad327372b02ed365572fd32
      public final SlackActivityAccountant slackActivityAccountant = new SlackActivityAccountant();
      // Spigot end
  
-@@ -980,6 +981,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -984,6 +985,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
                          recentTps[1] = tps5.getAverage();
                          recentTps[2] = tps15.getAverage();
                          // Paper end
