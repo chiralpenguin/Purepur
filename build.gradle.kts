@@ -16,7 +16,7 @@ toothpick {
     nmsRevision = "R0.1-SNAPSHOT"
 
     upstream = "AirplaneLite"
-    upstreamBranch = "origin/master"
+    upstreamBranch = "origin/perf/activation-ranges"
 
     paperclipName = "purepurclip.jar"
 
