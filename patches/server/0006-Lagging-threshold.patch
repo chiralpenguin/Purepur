@@ -39,10 +39,10 @@ index 6071dd9a97ecea36073231027b1e724b64c7f9b4..5feea0a1f0a6cedc044f08f2cbbd2ac7
 +    }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index a5cced8a7503388f8dfbee6a30c046b313387a36..71599df21b424a94a5b33c4ca63b05e108bc7286 100644
+index 3d6f7dd888ea98021cecfbb82a2237f35e7b068b..d1e80eb3e585786a642e29ed1acb60be26ad1832 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -2451,5 +2451,10 @@ public final class CraftServer implements Server {
+@@ -2456,5 +2456,10 @@ public final class CraftServer implements Server {
      public String getServerName() {
          return getProperties().serverName;
      }
