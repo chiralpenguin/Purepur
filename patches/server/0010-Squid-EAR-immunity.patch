@@ -19,7 +19,7 @@ index 6e97c5342b31c6bd0b59dc355bbf12e1882787da..926e9c0d719dba0320b83854b50de975
 +    }
  }
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index 9986254036d0d3ad66a292f14011755d58d4932d..439a751b5899c40f2b71a4a8f722ad7dea7b83ea 100644
+index 66ba0e146d043b83ed1b84be417369de7364e11f..bc15c9a7590a1bc557e24cde9e8e21aa22a9a464 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -388,6 +388,7 @@ public class ActivationRange

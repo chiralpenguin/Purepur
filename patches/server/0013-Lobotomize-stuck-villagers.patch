@@ -5,7 +5,7 @@ Subject: [PATCH] Lobotomize stuck villagers
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 4ee0d12081006a0dc762289abc2006ea7a8787d9..aa8b50294090f0c3e8eb56dca2e21d0d2504d750 100644
+index 43425149a93cfb42046f9589da7afcc2dbe8b7f0..3647b96902aea7b8d8eb863b4a6ddcfe4e4ab5b8 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -114,7 +114,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
