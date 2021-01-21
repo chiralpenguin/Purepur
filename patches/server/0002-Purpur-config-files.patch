@@ -45,7 +45,7 @@ index 673c40d952bae6ae9e92aac9742e58ffb6a8b1bb..ce14283dd1a1fddbea17c2fbaf1c4ef9
              config.save(CONFIG_FILE);
          } catch (IOException ex) {
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index ecff0657e5666ddc2e6a5c3111bfb2b8dd2b78d3..3ee8d31c453105eca7b96bede39a9ebbf40e1c2c 100644
+index 6000be9ba615fbc345dfd24d2974e7b632b6b53b..ca3d9dbcbeeb5059a942cae1a5020f0bcc59ac9c 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
 @@ -167,6 +167,15 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
@@ -64,19 +64,6 @@ index ecff0657e5666ddc2e6a5c3111bfb2b8dd2b78d3..3ee8d31c453105eca7b96bede39a9ebb
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
          // Paper end
          com.tuinity.tuinity.config.TuinityConfig.init((java.io.File) options.valueOf("tuinity-settings")); // Tuinity - Server Config
-diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index de9ea6770b8afc5e1020bef04ac6cca93b6b420c..21d0570a59240e955ff148bac0226b220a7dec36 100644
---- a/src/main/java/net/minecraft/server/EntityVillager.java
-+++ b/src/main/java/net/minecraft/server/EntityVillager.java
-@@ -166,7 +166,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
-     protected void mobTick() { mobTick(false); }
-     protected void mobTick(boolean inactive) {
-         this.world.getMethodProfiler().enter("villagerBrain");
--        if (!inactive) this.getBehaviorController().a((WorldServer) this.world, this); // CraftBukkit - decompile error // Paper
-+        if (!inactive) this.getBehaviorController().Wa((WorldServer) this.world, this); // CraftBukkit - decompile error // Paper
-         this.world.getMethodProfiler().exit();
-         if (this.bF) {
-             this.bF = false;
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
 index d9f0680bb44d8d6ce5e1d8efdc980961ead44017..90bed8b2c6f4012399ad09c5ab8d33a4e9ce3b14 100644
 --- a/src/main/java/net/minecraft/server/World.java

@@ -5,7 +5,7 @@ Subject: [PATCH] Configurable villager brain ticks
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index 21d0570a59240e955ff148bac0226b220a7dec36..c034869310ca3dadbfe5425c45aaa80dac59ac88 100644
+index eb72c6838d8be84f507605f0ec21b8c4511f8055..845792a90da8eb8ccd8a10df18a6c0bd8b912b69 100644
 --- a/src/main/java/net/minecraft/server/EntityVillager.java
 +++ b/src/main/java/net/minecraft/server/EntityVillager.java
 @@ -58,6 +58,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
@@ -24,19 +24,17 @@ index 21d0570a59240e955ff148bac0226b220a7dec36..c034869310ca3dadbfe5425c45aaa80d
      }
  
      @Override
-@@ -166,7 +168,11 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -168,6 +170,10 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
      protected void mobTick() { mobTick(false); }
      protected void mobTick(boolean inactive) {
          this.world.getMethodProfiler().enter("villagerBrain");
--        if (!inactive) this.getBehaviorController().Wa((WorldServer) this.world, this); // CraftBukkit - decompile error // Paper
 +        // Purpur start
 +        boolean tick = (world.getTime() + brainTickOffset) % world.purpurConfig.villagerBrainTicks == 0;
 +        if (((WorldServer) world).getMinecraftServer().lagging ? tick : world.purpurConfig.villagerUseBrainTicksOnlyWhenLagging || tick)
 +        // Purpur end
-+        if (!inactive) this.getBehaviorController().a((WorldServer) this.world, this); // CraftBukkit - decompile error // Paper
-         this.world.getMethodProfiler().exit();
-         if (this.bF) {
-             this.bF = false;
+         if (!inactive) {
+             if (!gg.airplane.AirplaneConfig.dynamicVillagerBehavior || behaviorTick++ % this.activatedPriority == 0) {
+                 this.getBehaviorController().a((WorldServer) this.world, this); // CraftBukkit - decompile error // Paper
 diff --git a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
 index 361f7857e461578e90cb71e15027dadaf794cb69..6e97c5342b31c6bd0b59dc355bbf12e1882787da 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
