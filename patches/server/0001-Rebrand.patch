@@ -5,35 +5,28 @@ Subject: [PATCH] Rebrand
 
 
 diff --git a/pom.xml b/pom.xml
-index ebdc99b63133e3cb8b46204fb61dc1e718ae32b0..095953ab7714fb807444b9df996871457785a76a 100644
+index 63734956a85935b5c1d105a4e4031925120c08b2..44106ab221dc853a6ea1a76688b95872fbaef2c4 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,10 +1,10 @@
  <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
      <modelVersion>4.0.0</modelVersion>
--    <artifactId>airplanelite</artifactId>
+-    <artifactId>tuinity</artifactId>
 +    <artifactId>purepur</artifactId>
      <packaging>jar</packaging>
      <version>1.16.5-R0.1-SNAPSHOT</version>
--    <name>AirplaneLite-Server</name>
+-    <name>Tuinity-Server</name>
 +    <name>Purepur-Server</name>
      <url>https://github.com/Spottedleaf/Tuinity</url>
  
      <properties>
-@@ -12,23 +12,22 @@
-         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-         <api.version>unknown</api.version>
-         <bt.name>git</bt.name>
--        <minecraft.version>1.16.5</minecraft.version>
-         <minecraft_version>1_16_R3</minecraft_version>
-         <maven.compiler.source>1.8</maven.compiler.source>
-         <maven.compiler.target>1.8</maven.compiler.target>
+@@ -19,16 +19,16 @@
      </properties>
  
      <parent>
--        <groupId>gg.airplane</groupId>
--        <artifactId>airplanelite-parent</artifactId>
+-        <groupId>com.tuinity</groupId>
+-        <artifactId>tuinity-parent</artifactId>
 +        <groupId>com.purityvanilla</groupId>
 +        <artifactId>purepur-parent</artifactId>
          <version>dev-SNAPSHOT</version>
@@ -43,26 +36,26 @@ index ebdc99b63133e3cb8b46204fb61dc1e718ae32b0..095953ab7714fb807444b9df99687145
      <dependencies>
          <dependency>
 -            <groupId>gg.airplane</groupId>
--            <artifactId>airplanelite-api</artifactId>
+-            <artifactId>airplane-api</artifactId>
 +            <groupId>com.purityvanilla</groupId>
 +            <artifactId>purepur-api</artifactId>
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
-@@ -183,7 +182,7 @@
+@@ -183,7 +183,7 @@
  
      <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
      <build>
--        <finalName>airplanelite-${minecraft.version}</finalName>
+-        <finalName>tuinity-${minecraft.version}</finalName>
 +        <finalName>purepur-${minecraft.version}</finalName>
          <defaultGoal>install</defaultGoal> <!-- Paper -->
          <plugins>
              <plugin>
-@@ -191,7 +190,7 @@
+@@ -191,7 +191,7 @@
                  <artifactId>gitdescribe-maven-plugin</artifactId>
                  <version>1.3</version>
                  <configuration>
--                    <outputPrefix>git-AirplaneLite-</outputPrefix> <!-- AirplaneLite -->
+-                    <outputPrefix>git-Tuinity-</outputPrefix> <!-- Tuinity -->
 +                    <outputPrefix>git-Purepur-</outputPrefix> <!-- AirplaneLite -->
                      <scmDirectory>..</scmDirectory>
                  </configuration>
@@ -94,14 +87,14 @@ index 229c3b0f0c650b501f31147adaa17194af57fedd..f88cf526d272fe47b5a474c0b344b748
                      throwable = throwable1;
                      throw throwable1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 2f169d1a859da203ad8a480ef91d95e4a699b1f2..673c2eb5f027f8f96e7288475ab2e4e9238a1e4e 100644
+index 47fd400da3f938ead3a281fe1e4d24a1a3809776..3803f875d1924c7f5b4083ef19b9d021370cc31a 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1511,7 +1511,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1513,7 +1513,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
--        return "AirplaneLite"; // AirplaneL // Tuinity //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+-        return "Airplane"; // Airplane // Tuinity //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
 +        return "Purepur"; // AirplaneL // Tuinity //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
@@ -228,14 +221,14 @@ index 0000000000000000000000000000000000000000..d8b408f061d96e2fa8e2e587462e2221
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index f1cdaaa944faea0db78b6b2039febd2fd2da4793..cd7a0f316d6c40e77d9a4dad82768dadb2ece6ed 100644
+index 2c4052419682b0301b987a68cd72d2719dc89e7c..d986a2616d44fbffac3ef629b53f84dcd1d303cc 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -232,7 +232,7 @@ import javax.annotation.Nullable; // Paper
+@@ -231,7 +231,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
--    private final String serverName = "AirplaneLite"; // Paper // Tuinity // AirplaneL
+-    private final String serverName = "Airplane"; // Paper // Tuinity // Airplane
 +    private final String serverName = "Purepur"; // Paper // Tuinity // Purepur
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
@@ -254,14 +247,14 @@ index ac5003dc827217bd1947c71044abcbcbd2210dcd..37c561fb775cf7dd955b185b4ea94fec
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 39ea99229fa5d88f380066040f05a398bbc8e866..884db7d4960b4275a70e210d558e4b1300e40729 100644
+index 1788d79ea489e446d3d9f541693d4ba3dfc26015..884db7d4960b4275a70e210d558e4b1300e40729 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
      public static String getBukkitVersion() {
          String result = "Unknown-Version";
  
--        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/gg.airplane/airplanelite-api/pom.properties"); // Tuinity
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/gg.airplane/airplane-api/pom.properties"); // Tuinity // Airplane
 +        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.purityvanilla/purepur-api/pom.properties"); // Tuinity
          Properties properties = new Properties();
  

@@ -45,7 +45,7 @@ index 9ae0897bfd6a4577901d9189d0dba22f3ec2110c..e41572a2ed53ab0935f3cc15399f0f24
          this.targetSelector.a(5, new PathfinderGoalNearestAttackableTarget<>(this, EntityTurtle.class, 10, true, false, EntityTurtle.bo));
      }
 diff --git a/src/main/java/net/minecraft/server/EntityZombie.java b/src/main/java/net/minecraft/server/EntityZombie.java
-index 752e39ad94ea9e8254853a3fda846be2bd436918..b723f71780e211f47218df59e7a3d94321ef67b6 100644
+index 4078f5dd68d0ca49886911d1bf58731129d731be..25e6d242c8c5dda629ddfdc1494fa5b7db8eb1f0 100644
 --- a/src/main/java/net/minecraft/server/EntityZombie.java
 +++ b/src/main/java/net/minecraft/server/EntityZombie.java
 @@ -59,7 +59,18 @@ public class EntityZombie extends EntityMonster {

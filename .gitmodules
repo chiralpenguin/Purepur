@@ -1,4 +1,4 @@
-[submodule "AirplaneLite"]
-	path = AirplaneLite
-	url = https://github.com/Technove/AirplaneLite.git
-	branch = perf/tracker
+[submodule "Airplane"]
+	path = Airplane
+	url = https://github.com/Technove/Airplane.git
+	branch = perf/block-ticking

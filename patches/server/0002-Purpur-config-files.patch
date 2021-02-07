@@ -65,7 +65,7 @@ index 6000be9ba615fbc345dfd24d2974e7b632b6b53b..ca3d9dbcbeeb5059a942cae1a5020f0b
          // Paper end
          com.tuinity.tuinity.config.TuinityConfig.init((java.io.File) options.valueOf("tuinity-settings")); // Tuinity - Server Config
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index d9f0680bb44d8d6ce5e1d8efdc980961ead44017..90bed8b2c6f4012399ad09c5ab8d33a4e9ce3b14 100644
+index b6fe0e7dea1753e0068a072aee89ed2ecb681094..6f92162f9c62c22365cfbac80ae127d7cf480e13 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -95,6 +95,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
@@ -360,10 +360,10 @@ index 0000000000000000000000000000000000000000..4904be939c7a4b1d1583fd7b6232c930
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index cd7a0f316d6c40e77d9a4dad82768dadb2ece6ed..ff2db927a016e6c2b9ad818a75afb4512e6be655 100644
+index d986a2616d44fbffac3ef629b53f84dcd1d303cc..048701fd724147a17ae2973431685e5257eb6b85 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -862,6 +862,7 @@ public final class CraftServer implements Server {
+@@ -861,6 +861,7 @@ public final class CraftServer implements Server {
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
          com.tuinity.tuinity.config.TuinityConfig.init((File) console.options.valueOf("tuinity-settings")); // Tuinity - Server Config
@@ -371,7 +371,7 @@ index cd7a0f316d6c40e77d9a4dad82768dadb2ece6ed..ff2db927a016e6c2b9ad818a75afb451
          for (WorldServer world : console.getWorlds()) {
              world.worldDataServer.setDifficulty(config.difficulty);
              world.setSpawnFlags(config.spawnMonsters, config.spawnAnimals);
-@@ -897,6 +898,7 @@ public final class CraftServer implements Server {
+@@ -896,6 +897,7 @@ public final class CraftServer implements Server {
              world.spigotConfig.init(); // Spigot
              world.paperConfig.init(); // Paper
              world.tuinityConfig.init(); // Tuinity - Server Config
@@ -379,7 +379,7 @@ index cd7a0f316d6c40e77d9a4dad82768dadb2ece6ed..ff2db927a016e6c2b9ad818a75afb451
          }
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
-@@ -915,6 +917,7 @@ public final class CraftServer implements Server {
+@@ -914,6 +916,7 @@ public final class CraftServer implements Server {
          reloadData();
          org.spigotmc.SpigotConfig.registerCommands(); // Spigot
          com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper

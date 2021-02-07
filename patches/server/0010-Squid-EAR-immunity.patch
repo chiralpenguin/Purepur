@@ -19,10 +19,10 @@ index 6e97c5342b31c6bd0b59dc355bbf12e1882787da..926e9c0d719dba0320b83854b50de975
 +    }
  }
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index 0a1628d6a61e7ee1a94741a78b9cbe1fe1d92c89..68b5bc233194dc668b5c98348ec859836b5c3d11 100644
+index e4c02ea6bd4ba99fd435f6335a98de6b218e044d..28eba02831c6d46008ad638fb83c642e230d253b 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
-@@ -388,6 +388,7 @@ public class ActivationRange
+@@ -386,6 +386,7 @@ public class ActivationRange
       */
      public static boolean checkIfActive(Entity entity)
      {
