@@ -65,7 +65,7 @@ index 6000be9ba615fbc345dfd24d2974e7b632b6b53b..ca3d9dbcbeeb5059a942cae1a5020f0b
          // Paper end
          com.tuinity.tuinity.config.TuinityConfig.init((java.io.File) options.valueOf("tuinity-settings")); // Tuinity - Server Config
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index b6fe0e7dea1753e0068a072aee89ed2ecb681094..6f92162f9c62c22365cfbac80ae127d7cf480e13 100644
+index 9dc574326e22669cb69f856a64bfc12cc95ef511..b6e969ee2d77d695c9fc63ce88efe686718e4f62 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -95,6 +95,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {

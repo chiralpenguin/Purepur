@@ -16,7 +16,7 @@ toothpick {
     nmsRevision = "R0.1-SNAPSHOT"
 
     upstream = "Airplane"
-    upstreamBranch = "origin/perf/block-ticking"
+    upstreamBranch = "origin/perf/tracker"
 
     paperclipName = "purepurclip.jar"
 
