@@ -5,7 +5,7 @@ Subject: [PATCH] Dont send useless entity packets
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
-index a2abfda5936a39ddcf834109618cd0df4dab12a0..cd610ddbcf40cb532a9835985107d49d81a1981e 100644
+index 864d5a0bd55fd763e51759bc5a5ce951d403504b..f9c6861f9c830af2646530188808e1b3ea57c42e 100644
 --- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
 +++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
 @@ -176,6 +176,7 @@ public class EntityTrackerEntry {
