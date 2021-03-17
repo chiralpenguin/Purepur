@@ -5,7 +5,7 @@ Subject: [PATCH] Lobotomize stuck villagers
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 496dd2d61701aa3af7a09d413f9c5e424e2ea944..4273b9c0de32629c6fdad3215b0b800444bf2546 100644
+index d089d5cc5fc6a2df25b06a8a0079c1442706f29c..6e858e4cddfbab1e7913195aa97035a7eff83da9 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -114,7 +114,7 @@ public abstract class Entity implements INamableTileEntity, ICommandListener, Ke
@@ -18,10 +18,10 @@ index 496dd2d61701aa3af7a09d413f9c5e424e2ea944..4273b9c0de32629c6fdad3215b0b8004
      public float yaw;
      public float pitch;
 diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index 845792a90da8eb8ccd8a10df18a6c0bd8b912b69..d87f4911ba47d80a78a78d1bc3577387f28c720f 100644
+index 4491b2199acd4ba9706d82c7e69d80fbc6083344..f4514557fc50faf09f852fbc90a4f11dd660564c 100644
 --- a/src/main/java/net/minecraft/server/EntityVillager.java
 +++ b/src/main/java/net/minecraft/server/EntityVillager.java
-@@ -166,11 +166,32 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -164,11 +164,32 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
  
      private int behaviorTick = 0;
  
@@ -54,7 +54,7 @@ index 845792a90da8eb8ccd8a10df18a6c0bd8b912b69..d87f4911ba47d80a78a78d1bc3577387
          boolean tick = (world.getTime() + brainTickOffset) % world.purpurConfig.villagerBrainTicks == 0;
          if (((WorldServer) world).getMinecraftServer().lagging ? tick : world.purpurConfig.villagerUseBrainTicksOnlyWhenLagging || tick)
          // Purpur end
-@@ -179,6 +200,8 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -177,6 +198,8 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
                  this.getBehaviorController().a((WorldServer) this.world, this); // CraftBukkit - decompile error // Paper
              }
          }
@@ -63,7 +63,7 @@ index 845792a90da8eb8ccd8a10df18a6c0bd8b912b69..d87f4911ba47d80a78a78d1bc3577387
          this.world.getMethodProfiler().exit();
          if (this.bF) {
              this.bF = false;
-@@ -309,6 +332,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -307,6 +330,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
          return true;
      }
  
@@ -71,7 +71,7 @@ index 845792a90da8eb8ccd8a10df18a6c0bd8b912b69..d87f4911ba47d80a78a78d1bc3577387
      public void fb() {
          this.fp();
          Iterator iterator = this.getOffers().iterator();
-@@ -343,6 +367,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -341,6 +365,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
          return this.bD == 0 || this.bD < 2 && this.world.getTime() > this.bC + 2400L;
      }
  
@@ -80,7 +80,7 @@ index 845792a90da8eb8ccd8a10df18a6c0bd8b912b69..d87f4911ba47d80a78a78d1bc3577387
          long i = this.bC + 12000L;
          long j = this.world.getTime();
 diff --git a/src/main/java/net/minecraft/server/NavigationAbstract.java b/src/main/java/net/minecraft/server/NavigationAbstract.java
-index b92ca4a6de01f3f86367fb8dfe3591b08a3e9218..1208464fba96daf276c9cc0c1c9b18db75b03abc 100644
+index be243d411abf68686e75d46023c93fb8bb5c84e0..88368ae1633cf8bfb845d52b38110a6828fcf699 100644
 --- a/src/main/java/net/minecraft/server/NavigationAbstract.java
 +++ b/src/main/java/net/minecraft/server/NavigationAbstract.java
 @@ -101,6 +101,7 @@ public abstract class NavigationAbstract {

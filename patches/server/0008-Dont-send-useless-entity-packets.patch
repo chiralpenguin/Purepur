@@ -5,10 +5,10 @@ Subject: [PATCH] Dont send useless entity packets
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
-index 81869215876d10a84ab27c0e6f41963c1346fd1c..f3b37f5704d752d1ec4d4d916690907dace67183 100644
+index 4b7e83e4f64a8bc4bf5b4ca569c32efefb0b3149..9f6d767ce8139999032d4c51221da743c694cb09 100644
 --- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
 +++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
-@@ -172,6 +172,7 @@ public class EntityTrackerEntry {
+@@ -180,6 +180,7 @@ public class EntityTrackerEntry {
                          this.o = 0;
                          packet1 = new PacketPlayOutEntityTeleport(this.tracker);
                      }
@@ -16,7 +16,7 @@ index 81869215876d10a84ab27c0e6f41963c1346fd1c..f3b37f5704d752d1ec4d4d916690907d
                  }
  
                  if ((this.e || this.tracker.impulse || this.tracker instanceof EntityLiving && ((EntityLiving) this.tracker).isGliding()) && this.tickCounter > 0) {
-@@ -258,6 +259,22 @@ public class EntityTrackerEntry {
+@@ -273,6 +274,22 @@ public class EntityTrackerEntry {
  
      }
  

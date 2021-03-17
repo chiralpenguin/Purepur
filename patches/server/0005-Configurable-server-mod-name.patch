@@ -5,10 +5,10 @@ Subject: [PATCH] Configurable server mod name
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 3803f875d1924c7f5b4083ef19b9d021370cc31a..2f5ef91a5732800d9b9a7acbb52ad29b5c0729a3 100644
+index a0c1f593120dba1c3f9f439bf113ff7d487beed7..27013a6d3cd53778690ee0f45aa0a82994412fa2 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1513,7 +1513,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1524,7 +1524,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {

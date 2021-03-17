@@ -5,7 +5,7 @@ Subject: [PATCH] Rebrand
 
 
 diff --git a/pom.xml b/pom.xml
-index 63734956a85935b5c1d105a4e4031925120c08b2..44106ab221dc853a6ea1a76688b95872fbaef2c4 100644
+index fa4ff553ae58285201d773a538eeda2b40c89c4a..8d8ba840709580dacab11ca7147c630280e25e71 100644
 --- a/pom.xml
 +++ b/pom.xml
 @@ -1,10 +1,10 @@
@@ -42,7 +42,7 @@ index 63734956a85935b5c1d105a4e4031925120c08b2..44106ab221dc853a6ea1a76688b95872
              <version>${project.version}</version>
              <scope>compile</scope>
          </dependency>
-@@ -183,7 +183,7 @@
+@@ -195,7 +195,7 @@
  
      <!-- This builds a completely 'ready to start' jar with all dependencies inside -->
      <build>
@@ -51,7 +51,7 @@ index 63734956a85935b5c1d105a4e4031925120c08b2..44106ab221dc853a6ea1a76688b95872
          <defaultGoal>install</defaultGoal> <!-- Paper -->
          <plugins>
              <plugin>
-@@ -191,7 +191,7 @@
+@@ -203,7 +203,7 @@
                  <artifactId>gitdescribe-maven-plugin</artifactId>
                  <version>1.3</version>
                  <configuration>
@@ -87,10 +87,10 @@ index 229c3b0f0c650b501f31147adaa17194af57fedd..f88cf526d272fe47b5a474c0b344b748
                      throwable = throwable1;
                      throw throwable1;
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 47fd400da3f938ead3a281fe1e4d24a1a3809776..3803f875d1924c7f5b4083ef19b9d021370cc31a 100644
+index ec6ef20e93af2298bdb3953b15e1ec24e8c72261..a0c1f593120dba1c3f9f439bf113ff7d487beed7 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1513,7 +1513,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
+@@ -1524,7 +1524,7 @@ public abstract class MinecraftServer extends IAsyncTaskHandlerReentrant<TickTas
      }
  
      public String getServerModName() {
@@ -221,10 +221,10 @@ index 0000000000000000000000000000000000000000..d8b408f061d96e2fa8e2e587462e2221
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 2c4052419682b0301b987a68cd72d2719dc89e7c..d986a2616d44fbffac3ef629b53f84dcd1d303cc 100644
+index ec8ad7a51f62c699588b5804331a5d33ab1fa5a7..71ebb73dfe13b53637216aac05ec761488380084 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -231,7 +231,7 @@ import javax.annotation.Nullable; // Paper
+@@ -232,7 +232,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
@@ -234,10 +234,10 @@ index 2c4052419682b0301b987a68cd72d2719dc89e7c..d986a2616d44fbffac3ef629b53f84dc
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index ac5003dc827217bd1947c71044abcbcbd2210dcd..37c561fb775cf7dd955b185b4ea94fecc574be63 100644
+index 00e53d577b1dcaccb409e62d35165ee015de9330..7de7afae711800154735411947ff140c76d5171f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -370,7 +370,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -377,7 +377,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
  
      @Override
      public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {

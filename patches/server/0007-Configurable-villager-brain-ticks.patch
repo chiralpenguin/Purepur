@@ -5,10 +5,10 @@ Subject: [PATCH] Configurable villager brain ticks
 
 
 diff --git a/src/main/java/net/minecraft/server/EntityVillager.java b/src/main/java/net/minecraft/server/EntityVillager.java
-index eb72c6838d8be84f507605f0ec21b8c4511f8055..845792a90da8eb8ccd8a10df18a6c0bd8b912b69 100644
+index 98b26a2f537594facb4ef32f9e3b6a81e41d6545..4491b2199acd4ba9706d82c7e69d80fbc6083344 100644
 --- a/src/main/java/net/minecraft/server/EntityVillager.java
 +++ b/src/main/java/net/minecraft/server/EntityVillager.java
-@@ -58,6 +58,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -56,6 +56,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
      }, MemoryModuleType.MEETING_POINT, (entityvillager, villageplacetype) -> {
          return villageplacetype == VillagePlaceType.s;
      });
@@ -16,7 +16,7 @@ index eb72c6838d8be84f507605f0ec21b8c4511f8055..845792a90da8eb8ccd8a10df18a6c0bd
  
      public EntityVillager(EntityTypes<? extends EntityVillager> entitytypes, World world) {
          this(entitytypes, world, VillagerType.PLAINS);
-@@ -70,6 +71,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -68,6 +69,7 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
          this.getNavigation().d(true);
          this.setCanPickupLoot(true);
          this.setVillagerData(this.getVillagerData().withType(villagertype).withProfession(VillagerProfession.NONE));
@@ -24,7 +24,7 @@ index eb72c6838d8be84f507605f0ec21b8c4511f8055..845792a90da8eb8ccd8a10df18a6c0bd
      }
  
      @Override
-@@ -168,6 +170,10 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
+@@ -166,6 +168,10 @@ public class EntityVillager extends EntityVillagerAbstract implements Reputation
      protected void mobTick() { mobTick(false); }
      protected void mobTick(boolean inactive) {
          this.world.getMethodProfiler().enter("villagerBrain");

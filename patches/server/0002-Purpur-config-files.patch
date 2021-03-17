@@ -5,14 +5,14 @@ Subject: [PATCH] Purpur config files
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index 52c0ab1ce46e1f3233ef746d9bc699356fa9fae4..4d8740678049aa749b42618470e9cc838555528d 100644
+index b480bd3044370b8eb733166f0c4b737344475993..4d8740678049aa749b42618470e9cc838555528d 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
 @@ -593,7 +593,7 @@ public class Metrics {
              boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
--                Metrics metrics = new Metrics("Tuinity", serverUUID, logFailedRequests, Bukkit.getLogger()); // Tuinity - we have our own bstats page
+-                Metrics metrics = new Metrics("Airplane", serverUUID, logFailedRequests, Bukkit.getLogger()); // Tuinity - we have our own bstats page // Airplane
 +                Metrics metrics = new Metrics("Purpur", serverUUID, logFailedRequests, Bukkit.getLogger()); // Purpur
  
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
@@ -22,14 +22,14 @@ index 52c0ab1ce46e1f3233ef746d9bc699356fa9fae4..4d8740678049aa749b42618470e9cc83
  
                  metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
 -                metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() || PaperConfig.isProxyOnlineMode() ? "online" : "offline"));
--                metrics.addCustomChart(new Metrics.SimplePie("tuinity_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Tuinity - we have our own bstats page
+-                metrics.addCustomChart(new Metrics.SimplePie("airplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Tuinity - we have our own bstats page // Airplane
 +                metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : (PaperConfig.isProxyOnlineMode() ? "bungee" : "offline"))); // Purpur
 +                metrics.addCustomChart(new Metrics.SimplePie("purpur_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Purpur
  
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 0efd8dc3175598f896a11094ca1f1c90f78a4279..77563e8f9534761438f0e44e4fc09e76d6ab5499 100644
+index f39452535b2807a226ada095f5c21b19ea238e5c..ad7df9e8a2cfc6fe65b193adfb65c7b32d6c92b3 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -118,6 +118,11 @@ public class PaperConfig {
@@ -45,10 +45,10 @@ index 0efd8dc3175598f896a11094ca1f1c90f78a4279..77563e8f9534761438f0e44e4fc09e76
              config.save(CONFIG_FILE);
          } catch (IOException ex) {
 diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
-index 6000be9ba615fbc345dfd24d2974e7b632b6b53b..ca3d9dbcbeeb5059a942cae1a5020f0bcc59ac9c 100644
+index 665d2d03676fde8d7e7d09fef3fd9cc13110d98d..b8a45c80b6691214e513286262f31b7b5b1dd5eb 100644
 --- a/src/main/java/net/minecraft/server/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/DedicatedServer.java
-@@ -167,6 +167,15 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+@@ -173,6 +173,15 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
              return false;
          }
          com.destroystokyo.paper.PaperConfig.registerCommands();
@@ -65,7 +65,7 @@ index 6000be9ba615fbc345dfd24d2974e7b632b6b53b..ca3d9dbcbeeb5059a942cae1a5020f0b
          // Paper end
          com.tuinity.tuinity.config.TuinityConfig.init((java.io.File) options.valueOf("tuinity-settings")); // Tuinity - Server Config
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 3c968c6133c42c3690fe554d5993d237de82c162..50548761bc94b06af7aaf9b2f91da54eb070df01 100644
+index 996fa5b4652f847f4e64d4cd191fe5a597471afe..068d303853572519efc16bb9cd3b799e458e39e7 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -95,6 +95,7 @@ public abstract class World implements GeneratorAccess, AutoCloseable {
@@ -360,10 +360,10 @@ index 0000000000000000000000000000000000000000..4904be939c7a4b1d1583fd7b6232c930
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index d986a2616d44fbffac3ef629b53f84dcd1d303cc..048701fd724147a17ae2973431685e5257eb6b85 100644
+index 71ebb73dfe13b53637216aac05ec761488380084..ea72d8e569e3ba55e6fe70cf5e5374f3ff6ec1fa 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -861,6 +861,7 @@ public final class CraftServer implements Server {
+@@ -865,6 +865,7 @@ public final class CraftServer implements Server {
          org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
          com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
          com.tuinity.tuinity.config.TuinityConfig.init((File) console.options.valueOf("tuinity-settings")); // Tuinity - Server Config
@@ -371,7 +371,7 @@ index d986a2616d44fbffac3ef629b53f84dcd1d303cc..048701fd724147a17ae2973431685e52
          for (WorldServer world : console.getWorlds()) {
              world.worldDataServer.setDifficulty(config.difficulty);
              world.setSpawnFlags(config.spawnMonsters, config.spawnAnimals);
-@@ -896,6 +897,7 @@ public final class CraftServer implements Server {
+@@ -900,6 +901,7 @@ public final class CraftServer implements Server {
              world.spigotConfig.init(); // Spigot
              world.paperConfig.init(); // Paper
              world.tuinityConfig.init(); // Tuinity - Server Config
@@ -379,7 +379,7 @@ index d986a2616d44fbffac3ef629b53f84dcd1d303cc..048701fd724147a17ae2973431685e52
          }
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
-@@ -914,6 +916,7 @@ public final class CraftServer implements Server {
+@@ -918,6 +920,7 @@ public final class CraftServer implements Server {
          reloadData();
          org.spigotmc.SpigotConfig.registerCommands(); // Spigot
          com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper
@@ -387,7 +387,7 @@ index d986a2616d44fbffac3ef629b53f84dcd1d303cc..048701fd724147a17ae2973431685e52
          overrideAllCommandBlockCommands = commandsConfiguration.getStringList("command-block-overrides").contains("*");
          ignoreVanillaPermissions = commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2298,6 +2301,18 @@ public final class CraftServer implements Server {
+@@ -2357,6 +2360,18 @@ public final class CraftServer implements Server {
          }
          // Tuinity end - add config to timings report
  
