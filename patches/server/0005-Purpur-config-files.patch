@@ -29,7 +29,7 @@ index b480bd3044370b8eb733166f0c4b737344475993..4d8740678049aa749b42618470e9cc83
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index f39452535b2807a226ada095f5c21b19ea238e5c..ad7df9e8a2cfc6fe65b193adfb65c7b32d6c92b3 100644
+index 14ac28d4d6b1ab0f0a70dfefc589f7723a1d2e1a..4eb122cfd31902df9789d2e8ff2615207a65ab06 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -118,6 +118,11 @@ public class PaperConfig {
@@ -45,7 +45,7 @@ index f39452535b2807a226ada095f5c21b19ea238e5c..ad7df9e8a2cfc6fe65b193adfb65c7b3
              config.save(CONFIG_FILE);
          } catch (IOException ex) {
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 24a46ad36613faa5f5a1a12b70f7af886e1608ae..28d47ef97939309ce26b6e4cae14925b510755fd 100644
+index 858bd62d2a17c15ee573c5cd607a876d3a99c2b1..a76219e59c24862b9c1e09e4a2a29cf2a6260514 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -212,6 +212,15 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
@@ -62,8 +62,8 @@ index 24a46ad36613faa5f5a1a12b70f7af886e1608ae..28d47ef97939309ce26b6e4cae14925b
 +        net.pl3x.purpur.PurpurConfig.registerCommands();
 +        // Purpur end
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
+         io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
          // Paper end
-         com.tuinity.tuinity.config.TuinityConfig.init((java.io.File) options.valueOf("tuinity-settings")); // Tuinity - Server Config
 diff --git a/src/main/java/net/minecraft/world/level/World.java b/src/main/java/net/minecraft/world/level/World.java
 index 51e6cd6119465f9fd6385072997971449afb5f42..f8261e21a84bf8c29d72116fc3166dc745a59c02 100644
 --- a/src/main/java/net/minecraft/world/level/World.java
@@ -86,7 +86,7 @@ index 51e6cd6119465f9fd6385072997971449afb5f42..f8261e21a84bf8c29d72116fc3166dc7
          this.ticksPerAnimalSpawns = this.getServer().getTicksPerAnimalSpawns(); // CraftBukkit
 diff --git a/src/main/java/net/pl3x/purpur/PurpurConfig.java b/src/main/java/net/pl3x/purpur/PurpurConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..19541e7071c05dce30c384093c8eae5beff3e515
+index 0000000000000000000000000000000000000000..2207d5ec00c0f6e4d332c0bbecbc224b24855927
 --- /dev/null
 +++ b/src/main/java/net/pl3x/purpur/PurpurConfig.java
 @@ -0,0 +1,130 @@
@@ -145,8 +145,8 @@ index 0000000000000000000000000000000000000000..19541e7071c05dce30c384093c8eae5b
 +        commands = new HashMap<>();
 +        commands.put("purpur", new PurpurCommand("purpur"));
 +
-+        version = getInt("config-version", 11);
-+        set("config-version", 11);
++        version = getInt("config-version", 12);
++        set("config-version", 12);
 +
 +        readConfig(PurpurConfig.class, null);
 +    }
@@ -404,7 +404,7 @@ index f9913d7bd66935f975b756f31e26153ec160b3b1..3e0b92259ad00541a8da595a918275c1
          public void restart() {
              org.spigotmc.RestartCommand.restart();
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 2774abda3dd1390ae904bf2b177bdd0f11968f40..d28088d510a4a40f3948f224a40a63de4645fa42 100644
+index 145748b5ca095cd555fd1f085a596bf0f58fea13..adf182b651ba8c7105483a4b18d1adfea37f91b9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -148,6 +148,14 @@ public class Main {
