@@ -2,13 +2,14 @@ import java.util.Locale
 
 pluginManagement {
     repositories {
+        gradlePluginPortal()
         mavenCentral()
         jcenter()
         maven("https://repo.jpenilla.xyz/snapshots")
     }
 }
 
-val forkName = "Purpur"
+val forkName = "Purepur"
 val forkNameLowercase = forkName.toLowerCase(Locale.ENGLISH)
 
 rootProject.name = forkNameLowercase

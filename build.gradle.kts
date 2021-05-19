@@ -8,9 +8,9 @@ plugins {
 }
 
 toothpick {
-    forkName = "Purpur"
-    groupId = "net.pl3x.purpur"
-    forkUrl = "https://github.com/pl3xgaming/Purpur"
+    forkName = "Purepur"
+    groupId = "com.purityvanilla.purepur"
+    forkUrl = "https://github.com/chiralpenguin/Purepur"
     val versionTag = System.getenv("BUILD_NUMBER")
         ?: "\"${gitCmd("rev-parse", "--short", "HEAD").output}\""
     forkVersion = "git-$forkName-$versionTag"
