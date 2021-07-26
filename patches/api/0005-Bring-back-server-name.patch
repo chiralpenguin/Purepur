@@ -1,0 +1,44 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sun, 26 May 2019 15:18:40 -0500
+Subject: [PATCH] Bring back server name
+
+
+diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
+index 88b33dbd6a2b67e9665e0c24b986cf30acb1a5fa..ef3068c0bf8e834c85e2719fe08c406790523161 100644
+--- a/src/main/java/org/bukkit/Bukkit.java
++++ b/src/main/java/org/bukkit/Bukkit.java
+@@ -2061,4 +2061,15 @@ public final class Bukkit {
+     public static Server.Spigot spigot() {
+         return server.spigot();
+     }
++
++    // Purpur start
++    /**
++     * Get the name of this server
++     * @return the name of the server
++     */
++    @NotNull
++    public static String getServerName() {
++        return server.getServerName();
++    }
++    // Purpur end
+ }
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index 0e37bb7ed1bf1855a5d19519f34018ae8b6a0d95..70bbd5b7586a35e70b09edfcd2d47bb54757bf9a 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -1807,4 +1807,13 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+     @NotNull
+     io.papermc.paper.datapack.DatapackManager getDatapackManager();
+     // Paper end
++
++    // Purpur start
++    /**
++     * Get the name of this server
++     * @return the name of the server
++     */
++    @NotNull
++    String getServerName();
++    // Purpur end
+ }
