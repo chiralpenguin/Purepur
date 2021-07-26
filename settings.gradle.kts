@@ -1,20 +1,9 @@
-import xyz.jpenilla.toothpick.setupToothpickProject
-import java.util.Locale
-
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        mavenCentral()
-        maven("https://repo.jpenilla.xyz/snapshots")
+        maven("https://papermc.io/repo/repository/maven-public/")
     }
 }
 
-plugins {
-    id("xyz.jpenilla.toothpick.settings") version "1.1.0-SNAPSHOT"
-}
-
-val forkName = "Purepur"
-rootProject.name = forkName.toLowerCase(Locale.ROOT)
-setupToothpickProject(rootProject, forkName)
+rootProject.name = "Purepur"
+include("Purepur-API", "Purepur-Server")

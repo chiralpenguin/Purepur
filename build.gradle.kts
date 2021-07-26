@@ -1,49 +1,74 @@
 plugins {
-    `java-library`
-    `maven-publish`
-    id("xyz.jpenilla.toothpick")
+    java
+    id("com.github.johnrengelman.shadow") version "7.0.0" apply false
+    id("io.papermc.paperweight.patcher") version "1.1.8"
 }
 
-toothpick {
-    forkName = "Purepur"
-    groupId = "com.purityvanilla.purepur"
-    forkUrl = "https://github.com/chiralpenguin/Purepur"
-    val versionTag = System.getenv("BUILD_NUMBER")
-        ?: "\"${commitHash() ?: error("Could not obtain git hash")}\""
-    forkVersion = "git-$forkName-$versionTag"
-
-    minecraftVersion = "1.16.5"
-    nmsPackage = "1_16_R3"
-    nmsRevision = "R0.1-SNAPSHOT"
-
-    upstream = "Paper"
-    upstreamBranch = "origin/ver/1.16.5"
-
-    server {
-        project = projects.purepurServer.dependencyProject
-        patchesDir = rootProject.projectDir.resolve("patches/server")
+repositories {
+    mavenCentral()
+    maven("https://papermc.io/repo/repository/maven-public/") {
+        content {
+            onlyForConfigurations("paperclip")
+        }
     }
-    api {
-        project = projects.purepurApi.dependencyProject
-        patchesDir = rootProject.projectDir.resolve("patches/api")
+    maven("https://maven.quiltmc.org/repository/release/") {
+        content {
+            onlyForConfigurations("remapper")
+        }
     }
+}
+
+dependencies {
+    remapper("org.quiltmc:tiny-remapper:0.4.1")
+    paperclip("io.papermc:paperclip:2.0.1")
 }
 
 subprojects {
-    repositories {
-        maven("https://nexus.velocitypowered.com/repository/velocity-artifacts-snapshots/")
-        maven("https://oss.sonatype.org/content/repositories/snapshots/") {
-            name = "sonatype-oss-snapshots"
+    apply(plugin = "java")
+    apply(plugin = "maven-publish")
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(16))
         }
     }
 
-    java {
-        sourceCompatibility = JavaVersion.toVersion(8)
-        targetCompatibility = JavaVersion.toVersion(8)
+    tasks.withType<JavaCompile>().configureEach {
+        options.encoding = "UTF-8"
+        options.release.set(16)
     }
 
-    publishing.repositories.maven {
-        url = uri("https://repo.pl3x.net/snapshots")
-        credentials(PasswordCredentials::class)
+    repositories {
+        mavenCentral()
+        maven("https://oss.sonatype.org/content/groups/public/")
+        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://ci.emc.gs/nexus/content/groups/aikar/")
+        maven("https://repo.aikar.co/content/groups/aikar")
+        maven("https://repo.md-5.net/content/repositories/releases/")
+        maven("https://hub.spigotmc.org/nexus/content/groups/public/")
+        maven("https://nexus.velocitypowered.com/repository/velocity-artifacts-snapshots/")
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    }
+
+    configure<PublishingExtension> {
+        repositories.maven {
+            name = "maven"
+            url = uri("https://repo.pl3x.net/snapshots")
+            credentials(PasswordCredentials::class)
+        }
+    }
+}
+
+paperweight {
+    serverProject.set(project(":Purepur-Server"))
+
+    usePaperUpstream(providers.gradleProperty("paperCommit")) {
+        withPaperPatcher {
+            apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
+            apiOutputDir.set(layout.projectDirectory.dir("Purepur-API"))
+
+            serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
+            serverOutputDir.set(layout.projectDirectory.dir("Purepur-Server"))
+        }
     }
 }
