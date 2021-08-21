@@ -60,15 +60,15 @@ subprojects {
 }
 
 paperweight {
-    serverProject.set(project(":Purpur-Server"))
+    serverProject.set(project(":Purepur-Server"))
 
     usePaperUpstream(providers.gradleProperty("paperCommit")) {
         withPaperPatcher {
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
-            apiOutputDir.set(layout.projectDirectory.dir("Purpur-API"))
+            apiOutputDir.set(layout.projectDirectory.dir("Purepur-API"))
 
             serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
-            serverOutputDir.set(layout.projectDirectory.dir("Purpur-Server"))
+            serverOutputDir.set(layout.projectDirectory.dir("Purepur-Server"))
         }
     }
 }

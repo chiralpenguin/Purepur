@@ -5,7 +5,7 @@ Subject: [PATCH] Rebrand
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 467ac5ba77cc35dc84c38161881db37e8f9adc14..9b844735f37de2f833b59f619c88045e8ad336c9 100644
+index 467ac5ba77cc35dc84c38161881db37e8f9adc14..d21a611de45e2117b8c05f1b68ea74fefdd779fe 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -35,7 +35,7 @@ repositories {
@@ -13,7 +13,7 @@ index 467ac5ba77cc35dc84c38161881db37e8f9adc14..9b844735f37de2f833b59f619c88045e
  
  dependencies {
 -    implementation(project(":Airplane-API")) // Airplane // Tuinity
-+    implementation(project(":Purpur-API")) // Tuinity // Airplane // Purpur
++    implementation(project(":Purepur-API")) // Tuinity // Airplane // Purpur
      implementation("io.papermc.paper:paper-mojangapi:1.17.1-R0.1-SNAPSHOT") // Tuinity
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.12.1")
@@ -208,7 +208,7 @@ index fe5eac5f01461c9ca81301142218aa131475dfe7..b848812314552fe3058b338adcb81f07
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 1788d79ea489e446d3d9f541693d4ba3dfc26015..191f5331f0c7871f80f0da9cc38345ce33353577 100644
+index 1788d79ea489e446d3d9f541693d4ba3dfc26015..1e5295da4e5761486808db6ca17bf372a02760a3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
@@ -216,7 +216,7 @@ index 1788d79ea489e446d3d9f541693d4ba3dfc26015..191f5331f0c7871f80f0da9cc38345ce
          String result = "Unknown-Version";
  
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/gg.airplane/airplane-api/pom.properties"); // Tuinity // Airplane
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/net.pl3x.purpur/purpur-api/pom.properties"); // Tuinity // Airplane // Purpur
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.purityvanilla.purepur/purepur-api/pom.properties"); // Tuinity // Airplane // Purpur
          Properties properties = new Properties();
  
          if (stream != null) {

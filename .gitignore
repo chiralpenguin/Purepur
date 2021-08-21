@@ -52,7 +52,7 @@ manifest.mf
 run/
 
 build-data/
-Purpur-API
-Purpur-MojangAPI
-Purpur-Server
+Purepur-API
+Purepur-MojangAPI
+Purepur-Server
 *.jar
