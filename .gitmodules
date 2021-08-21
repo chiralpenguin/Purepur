@@ -1,5 +1,0 @@
-[submodule "Paper"]
-	path = Paper
-	url = git@github.com:PaperMC/Paper.git
-[submodule "Paper/"]
-	branch = ver/1.16.5
