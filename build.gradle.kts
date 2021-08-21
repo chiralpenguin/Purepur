@@ -1,7 +1,7 @@
 plugins {
     java
     id("com.github.johnrengelman.shadow") version "7.0.0" apply false
-    id("io.papermc.paperweight.patcher") version "1.1.8"
+    id("io.papermc.paperweight.patcher") version "1.1.9"
 }
 
 repositories {
@@ -46,9 +46,8 @@ subprojects {
         maven("https://repo.aikar.co/content/groups/aikar")
         maven("https://repo.md-5.net/content/repositories/releases/")
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
-        maven("https://nexus.velocitypowered.com/repository/velocity-artifacts-snapshots/")
-        maven("https://oss.sonatype.org/content/repositories/snapshots/")
         maven("https://jitpack.io")
+        maven("https://oss.sonatype.org/content/repositories/snapshots/")
     }
 
     configure<PublishingExtension> {
@@ -61,15 +60,15 @@ subprojects {
 }
 
 paperweight {
-    serverProject.set(project(":Purepur-Server"))
+    serverProject.set(project(":Purpur-Server"))
 
     usePaperUpstream(providers.gradleProperty("paperCommit")) {
         withPaperPatcher {
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
-            apiOutputDir.set(layout.projectDirectory.dir("Purepur-API"))
+            apiOutputDir.set(layout.projectDirectory.dir("Purpur-API"))
 
             serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
-            serverOutputDir.set(layout.projectDirectory.dir("Purepur-Server"))
+            serverOutputDir.set(layout.projectDirectory.dir("Purpur-Server"))
         }
     }
 }
