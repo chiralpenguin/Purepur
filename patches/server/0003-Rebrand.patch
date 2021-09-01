@@ -192,7 +192,7 @@ index fe1b046f707ee145327475b7f923928f4dfcad05..c757e4fe3e511f699512dccbcb11137f
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 1788d79ea489e446d3d9f541693d4ba3dfc26015..e7d740e191c5ac408ba1fa493e9367dd52900a02 100644
+index 1788d79ea489e446d3d9f541693d4ba3dfc26015..5c02ee81aa3e735be039f4d3363a0523163111b3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
@@ -200,7 +200,7 @@ index 1788d79ea489e446d3d9f541693d4ba3dfc26015..e7d740e191c5ac408ba1fa493e9367dd
          String result = "Unknown-Version";
  
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/gg.airplane/airplane-api/pom.properties"); // Tuinity // Airplane
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/net.pl3x.purpur/purpur-api/pom.properties"); // Airplane // Purpur
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.purityvanilla.purepur/purepur-api/pom.properties"); // Airplane // Purpur
          Properties properties = new Properties();
  
          if (stream != null) {

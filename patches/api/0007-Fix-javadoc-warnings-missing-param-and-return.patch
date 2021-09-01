@@ -927,7 +927,7 @@ index a6a7429ed2e1eefb2b12b7480ed74fcc3963a864..e8027e1d505dda6effbb1698550016e8
  
          NORMAL(false),
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index 436c42649395fd6df3425c2ddeb85a99edf9c1c4..281ade102b57f57a372837dc358fb26a95273a66 100644
+index afa245018192a63e5db8bc568ddea2790bf5b8a2..a397f57032dbdc954fa989ca14987e609d54c9c9 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
 @@ -2115,6 +2115,8 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
