@@ -19,21 +19,36 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 324285684ea1a79c3844142046dca9a34f78e1a9..467ac5ba77cc35dc84c38161881db37e8f9adc14 100644
+index b3687f632bbf06c933a6ef04dc2236ccf3c030b8..8a4c00b978b289d162321a043efb0a5ca4c9ef4a 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -35,7 +35,7 @@ repositories {
+@@ -2,9 +2,12 @@ import com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCach
+ import com.github.jengelman.gradle.plugins.shadow.transformers.Transformer
+ import io.papermc.paperweight.tasks.BaseTask
+ import io.papermc.paperweight.util.Git
++import io.papermc.paperweight.util.cache
+ import io.papermc.paperweight.util.defaultOutput
+ import io.papermc.paperweight.util.openZip
+ import io.papermc.paperweight.util.path
++import io.papermc.paperweight.util.registering
++import io.papermc.paperweight.util.set
+ import shadow.org.apache.logging.log4j.core.config.plugins.processor.PluginProcessor.PLUGIN_CACHE_FILE
+ import java.nio.file.Files
+ import java.util.Locale
+@@ -29,8 +32,8 @@ repositories {
  }
  
  dependencies {
--    implementation(project(":Tuinity-API")) // Tuinity
-+    implementation(project(":Airplane-API")) // Airplane // Tuinity
-     implementation("io.papermc.paper:paper-mojangapi:1.17.1-R0.1-SNAPSHOT") // Tuinity
+-    implementation(project(":Paper-API"))
+-    implementation(project(":Paper-MojangAPI"))
++    implementation(project(":Airplane-API")) // Airplane // Paper
++    implementation("io.papermc.paper:paper-mojangapi:1.17.1-R0.1-SNAPSHOT") // Airplane
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.12.1")
-@@ -71,6 +71,10 @@ dependencies {
+     implementation("net.minecrell:terminalconsoleappender:1.2.0")
+@@ -65,6 +68,10 @@ dependencies {
      implementation("org.quiltmc:tiny-mappings-parser:0.3.0") // Paper - needed to read mappings for stacktrace deobfuscation
-     implementation("com.velocitypowered:velocity-native:1.1.0-SNAPSHOT") // Tuinity
+     implementation("com.velocitypowered:velocity-native:1.1.0-SNAPSHOT") // Paper
  
 +    implementation("com.github.technove:AIR:fe3dbb4420") // Airplane - config
 +    implementation ("me.carleslc.Simple-YAML:Simple-Yaml:1.7.2") // Airplane - more config
@@ -42,38 +57,60 @@ index 324285684ea1a79c3844142046dca9a34f78e1a9..467ac5ba77cc35dc84c38161881db37e
      testImplementation("io.github.classgraph:classgraph:4.8.47") // Paper - mob goal test
      testImplementation("junit:junit:4.13.1")
      testImplementation("org.hamcrest:hamcrest-library:1.3")
-@@ -88,7 +92,7 @@ tasks.jar {
-         attributes(
+@@ -83,6 +90,7 @@ tasks.jar {
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
--            "Implementation-Version" to "git-Tuinity-$implementationVersion", // Tuinity
+             "Implementation-Version" to "git-Paper-$implementationVersion",
 +            "Implementation-Version" to "git-Airplane-$implementationVersion", // Airplane // Tuinity
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
+@@ -140,6 +148,22 @@ relocation {
+     }
+ }
+ 
++val generateReobfMappings = rootProject.tasks.named<io.papermc.paperweight.tasks.GenerateReobfMappings>("generateReobfMappings")
++
++val patchReobfMappings by tasks.registering<io.papermc.paperweight.tasks.PatchMappings> {
++    inputMappings.set(generateReobfMappings.flatMap { it.reobfMappings })
++    patch.set(rootProject.layout.cache.resolve("paperweight/upstreams/paper/build-data/reobf-mappings-patch.tiny"))
++
++    fromNamespace.set(io.papermc.paperweight.util.constants.DEOBF_NAMESPACE)
++    toNamespace.set(io.papermc.paperweight.util.constants.SPIGOT_NAMESPACE)
++
++    outputMappings.set(layout.cache.resolve("paperweight/mappings/reobf-patched.tiny"))
++}
++
++tasks.reobfJar {
++    mappingsFile.set(patchReobfMappings.flatMap { it.outputMappings })
++}
++
+ val generatePom = tasks.named<GenerateMavenPom>("generatePomFileForMavenPublication")
+ 
+ tasks.shadowJar {
 diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index b5728243f01aa6ea75cb42af453fd9348a5f438b..4cd8116fd623fbc9e175986526d3ae51a72b76e0 100644
+index 7d44abcb4fff9717a1af55879deb7eb9c2d9e7e9..da6a5b1b2f5203a0fab8e4fccd727951df7c9c9a 100644
 --- a/src/main/java/co/aikar/timings/TimingsExport.java
 +++ b/src/main/java/co/aikar/timings/TimingsExport.java
-@@ -229,7 +229,8 @@ public class TimingsExport extends Thread {
+@@ -228,7 +228,8 @@ public class TimingsExport extends Thread {
+         parent.put("config", createObject(
              pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
              pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
-             pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)), // Tuinity - add config to timings report
--            pair("tuinity", mapAsJSON(Bukkit.spigot().getTuinityConfig(), null)) // Tuinity - add config to timings report
-+            pair("tuinity", mapAsJSON(Bukkit.spigot().getTuinityConfig(), null)), // Tuinity - add config to timings report
-+            pair("airplane", mapAsJSON(gg.airplane.AirplaneConfig.getConfigCopy(), null))
+-            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null))
++            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)), // Airplane
++            pair("airplane", mapAsJSON(gg.airplane.AirplaneConfig.getConfigCopy(), null)) // Airplane
          ));
  
          new TimingsExport(listeners, parent, history).start();
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index 3918b24c98faa5232c7ffd733ba8000562132785..f5d01bce4d5547b4aeca96b7962b2090f47ea541 100644
+index 218f5bafeed8551b55b91c7fccaf6935c8b631ca..f5d01bce4d5547b4aeca96b7962b2090f47ea541 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
 @@ -593,7 +593,7 @@ public class Metrics {
              boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
--                Metrics metrics = new Metrics("Tuinity", serverUUID, logFailedRequests, Bukkit.getLogger()); // Tuinity - we have our own bstats page
+-                Metrics metrics = new Metrics("Paper", serverUUID, logFailedRequests, Bukkit.getLogger());
 +                Metrics metrics = new Metrics("Airplane", serverUUID, logFailedRequests, Bukkit.getLogger()); // Tuinity - we have our own bstats page // Airplane
  
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
@@ -82,13 +119,13 @@ index 3918b24c98faa5232c7ffd733ba8000562132785..f5d01bce4d5547b4aeca96b7962b2090
  
                  metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
                  metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : "offline"));
--                metrics.addCustomChart(new Metrics.SimplePie("tuinity_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Tuinity - we have our own bstats page
+-                metrics.addCustomChart(new Metrics.SimplePie("paper_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown"));
 +                metrics.addCustomChart(new Metrics.SimplePie("airplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Tuinity - we have our own bstats page // Airplane
  
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 2e0191e5cfe8e29fb0a6c4fc6a2a570d4b8ae449..cba14fd282d1294eba4581336c5e438484df76f9 100644
+index dcae40fde8087ce09ec8b9360f2abc860b88c975..0f0b0bbcc0e47b8fe3e1e5d4a4ef0eed389d020b 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -202,16 +202,26 @@ public class PaperConfig {
@@ -120,52 +157,39 @@ index 2e0191e5cfe8e29fb0a6c4fc6a2a570d4b8ae449..cba14fd282d1294eba4581336c5e4384
          int timingHistoryLength = getInt("timings.history-length", 3600);
          timingsServerName = getString("timings.server-name", "Unknown Server");
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index d50b61876f15d95b836b3dd81d9c3492c91a8448..5460f57f0473868b3fb09c526a1767f717a2740e 100644
+index 580bae0d414d371a07a6bfeefc41fdd989dc0083..51d89d6bcbcc24a6be6a836263ebb1ed23e91cba 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -29,8 +29,8 @@ public class PaperVersionFetcher implements VersionFetcher {
      @Nonnull
      @Override
      public Component getVersionMessage(@Nonnull String serverVersion) {
--        String[] parts = serverVersion.substring("git-Tuinity-".length()).split("[-\\s]"); // Tuinity
--        final Component updateMessage = getUpdateStatusMessage("Spottedleaf/Tuinity", GITHUB_BRANCH_NAME, parts[0]); // Tuinity
+-        String[] parts = serverVersion.substring("git-Paper-".length()).split("[-\\s]");
+-        final Component updateMessage = getUpdateStatusMessage("PaperMC/Paper", GITHUB_BRANCH_NAME, parts[0]);
 +        String[] parts = serverVersion.substring("git-Airplane-".length()).split("[-\\s]"); // Tuinity
 +        final Component updateMessage = getUpdateStatusMessage("TECHNOVE/Airplane", GITHUB_BRANCH_NAME, parts[0]); // Tuinity
          final Component history = getHistory();
  
          return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
-diff --git a/src/main/java/com/tuinity/tuinity/util/CollisionUtil.java b/src/main/java/com/tuinity/tuinity/util/CollisionUtil.java
-index a2f52a68420a2d23d8f54f61f7aeede41567dc0f..4da3e83b61b89978aed968d4aaec3308f3f00995 100644
---- a/src/main/java/com/tuinity/tuinity/util/CollisionUtil.java
-+++ b/src/main/java/com/tuinity/tuinity/util/CollisionUtil.java
-@@ -398,6 +398,8 @@ public final class CollisionUtil {
-                                                               final List<AABB> into, final boolean loadChunks, final boolean collidesWithUnloaded,
-                                                               final boolean checkBorder, final boolean checkOnly, final BiPredicate<BlockState, BlockPos> predicate) {
-         boolean ret = false;
-+        BlockPos.MutableBlockPos mutablePos; // Airplane
-+
+@@ -54,13 +54,13 @@ public class PaperVersionFetcher implements VersionFetcher {
  
-         if (checkBorder) {
-             if (CollisionUtil.isAlmostCollidingOnBorder(getter.getWorldBorder(), aabb)) {
-@@ -408,7 +410,8 @@ public final class CollisionUtil {
-                     ret = true;
-                 }
-             }
+     private static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
+         int distance;
+-        try {
+-            int jenkinsBuild = Integer.parseInt(versionInfo);
+-            distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
+-        } catch (NumberFormatException ignored) {
++        //try {
++        //    int jenkinsBuild = Integer.parseInt(versionInfo);
++        //    distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
++        //} catch (NumberFormatException ignored) {
+             versionInfo = versionInfo.replace("\"", "");
+             distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
 -        }
-+            mutablePos = entity.cachedBlockPos; // Airplane
-+        } else mutablePos = new BlockPos.MutableBlockPos(); // Airplane
++        //}
  
-         int minBlockX = Mth.floor(aabb.minX - COLLISION_EPSILON) - 1;
-         int maxBlockX = Mth.floor(aabb.maxX + COLLISION_EPSILON) + 1;
-@@ -424,7 +427,7 @@ public final class CollisionUtil {
-         final int minBlock = minSection << 4;
-         final int maxBlock = (maxSection << 4) | 15;
- 
--        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
-+        //BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos(); // Airplane - moved up
-         CollisionContext collisionShape = null;
- 
-         // special cases:
+         switch (distance) {
+             case -1:
 diff --git a/src/main/java/gg/airplane/AirplaneCommand.java b/src/main/java/gg/airplane/AirplaneCommand.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..89c89e633f14b5820147e734b1b7ad8cadfdce80
@@ -1612,10 +1636,10 @@ index 0000000000000000000000000000000000000000..a7f297ebb569f7c1f205e967ca485be7
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/Util.java b/src/main/java/net/minecraft/Util.java
-index 82e8338c69e846ab9ff0a9b9427d968e0a67927e..ea372e5018fad6edbd82a38c2c89baa3f51712bf 100644
+index 505546d32eea4682452dbac02311433157f6a30e..5c7b9ad379f3c272e15648dd16f4df9245d927da 100644
 --- a/src/main/java/net/minecraft/Util.java
 +++ b/src/main/java/net/minecraft/Util.java
-@@ -332,6 +332,10 @@ public class Util {
+@@ -344,6 +344,10 @@ public class Util {
      }
  
      public static <V> CompletableFuture<List<V>> sequence(List<? extends CompletableFuture<? extends V>> futures) {
@@ -1626,7 +1650,7 @@ index 82e8338c69e846ab9ff0a9b9427d968e0a67927e..ea372e5018fad6edbd82a38c2c89baa3
          return futures.stream().reduce(CompletableFuture.completedFuture(Lists.newArrayList()), (completableFuture, completableFuture2) -> {
              return completableFuture2.thenCombine(completableFuture, (object, list) -> {
                  List<V> list2 = Lists.newArrayListWithCapacity(list.size() + 1);
-@@ -347,6 +351,8 @@ public class Util {
+@@ -359,6 +363,8 @@ public class Util {
                  return list3;
              });
          });
@@ -1636,19 +1660,19 @@ index 82e8338c69e846ab9ff0a9b9427d968e0a67927e..ea372e5018fad6edbd82a38c2c89baa3
  
      public static <V> CompletableFuture<List<V>> sequenceFailFast(List<? extends CompletableFuture<? extends V>> futures) {
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index f25bb4214cffd0050241ea229b6acb0c16b2b0a5..0a78b208cbafc850e24501f65197e1cd2e8efcf5 100644
+index 099db3a627c1d3c08f3b923bb02a1cb8a0a268ab..635ccc60d32333e178b28faae9c26de107b380d7 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1716,7 +1716,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1721,7 +1721,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
--        return "Tuinity"; // Tuinity - Tuinity > //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "Airplane"; // Airplane - Airplane > // Tuinity - Tuinity > //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+-        return "Paper"; //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "Airplane"; // Airplane - Airplane > //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
-@@ -2292,6 +2292,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -2297,6 +2297,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      }
  
      public ProfilerFiller getProfiler() {
@@ -1657,23 +1681,23 @@ index f25bb4214cffd0050241ea229b6acb0c16b2b0a5..0a78b208cbafc850e24501f65197e1cd
      }
  
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 1b324839e37d510552f5f5497de009add69ecda5..aa9ddbec584129694e975ff1083c1ff651a5d7c8 100644
+index 7b6c547e71230fbb3733f99a4597b3f5b51547b8..8242200f073aee40482b190c7c0aafd5320ac4fe 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -224,6 +224,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -223,6 +223,8 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+         io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
          io.papermc.paper.util.ObfHelper.INSTANCE.getClass(); // load mappings for stacktrace deobf and etc.
          // Paper end
-         com.tuinity.tuinity.config.TuinityConfig.init((java.io.File) options.valueOf("tuinity-settings")); // Tuinity - Server Config
 +        gg.airplane.AirplaneConfig.load(); // Airplane - config
 +        gg.airplane.commands.AirplaneCommands.init(); // Airplane - command
  
          this.setPvpAllowed(dedicatedserverproperties.pvp);
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
 diff --git a/src/main/java/net/minecraft/server/level/ChunkMap.java b/src/main/java/net/minecraft/server/level/ChunkMap.java
-index b9b985268f5627a238c302f81400a05bfd7c592d..c82ae84190273609b0f5f533eb41a0e5363c16bf 100644
+index 4386402e5e55438475c48b023c61bfb2dbe71a8f..2eacfbe3512f374169d96ac66c8be5a4f1561b6a 100644
 --- a/src/main/java/net/minecraft/server/level/ChunkMap.java
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
-@@ -2453,8 +2453,28 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially
+@@ -2402,8 +2402,28 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially
              return ChunkMap.this.level.getServer().getScaledTrackingDistance(initialDistance);
          }
  
@@ -1702,7 +1726,7 @@ index b9b985268f5627a238c302f81400a05bfd7c592d..c82ae84190273609b0f5f533eb41a0e5
              Iterator iterator = this.entity.getIndirectPassengers().iterator();
  
              while (iterator.hasNext()) {
-@@ -2466,6 +2486,9 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially
+@@ -2415,6 +2435,9 @@ Sections go from 0..16. Now whenever a section is not empty, it can potentially
                      i = j;
                  }
              }
@@ -1713,10 +1737,10 @@ index b9b985268f5627a238c302f81400a05bfd7c592d..c82ae84190273609b0f5f533eb41a0e5
              return this.scaledRange(i);
          }
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-index 8b84befc6840d25dc3d6e2d42a4024a3c979a097..d720eba9fbfa1d8a13dd204e9f1a84233b834e58 100644
+index 7470f3ba66c2e894b5a5b0ba392ecabf8b04aff9..35f27e9a7c82eaec5b4a1a71696dac8485b2cd6d 100644
 --- a/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 +++ b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
-@@ -987,6 +987,7 @@ public class ServerChunkCache extends ChunkSource {
+@@ -983,6 +983,7 @@ public class ServerChunkCache extends ChunkSource {
              }
              // Paper end - optimize isOutisdeRange
              this.level.getProfiler().push("pollingChunks");
@@ -1725,13 +1749,13 @@ index 8b84befc6840d25dc3d6e2d42a4024a3c979a097..d720eba9fbfa1d8a13dd204e9f1a8423
              boolean flag2 = level.ticksPerAnimalSpawns != 0L && worlddata.getGameTime() % level.ticksPerAnimalSpawns == 0L; // CraftBukkit
  
 diff --git a/src/main/java/net/minecraft/server/level/ServerEntity.java b/src/main/java/net/minecraft/server/level/ServerEntity.java
-index d73aa6032bf56448f518cff9f019b3f7a1c5eddb..7eb6614c126d03435689a92c0064baffd446ec5e 100644
+index b7c9294fdd3d799d410afba4a1118aa371c98533..c71bc00973899feec0ec5530bf3d237928810cf4 100644
 --- a/src/main/java/net/minecraft/server/level/ServerEntity.java
 +++ b/src/main/java/net/minecraft/server/level/ServerEntity.java
 @@ -174,6 +174,7 @@ public class ServerEntity {
                      boolean flag4 = k < -32768L || k > 32767L || l < -32768L || l > 32767L || i1 < -32768L || i1 > 32767L;
  
-                     if (!flag4 && this.teleportDelay <= 400 && !this.wasRiding && this.wasOnGround == this.entity.isOnGround() && !(com.tuinity.tuinity.config.TuinityConfig.sendFullPosForHardCollidingEntities && this.entity.hardCollides())) { // Tuinity - send full pos for hard colliding entities to prevent collision problems due to desync
+                     if (!flag4 && this.teleportDelay <= 400 && !this.wasRiding && this.wasOnGround == this.entity.isOnGround() && !(com.destroystokyo.paper.PaperConfig.sendFullPosForHardCollidingEntities && this.entity.hardCollides())) { // Paper - send full pos for hard colliding entities to prevent collision problems due to desync
 +                        if (flag2 || flag3 || this.entity instanceof AbstractArrow) { // Airplane
                          if ((!flag2 || !flag3) && !(this.entity instanceof AbstractArrow)) {
                              if (flag2) {
@@ -1745,10 +1769,10 @@ index d73aa6032bf56448f518cff9f019b3f7a1c5eddb..7eb6614c126d03435689a92c0064baff
                          this.wasOnGround = this.entity.isOnGround();
                          this.teleportDelay = 0;
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index f9ed48f5bbde84fd1804e482f2777b516cc3a1ef..29ce41330bd291a050441fc5aecd7eef65ff471c 100644
+index cebaf0fb8187335ca303621a2cb412bb22584e23..d743d50a9b3ad9502fc11adc6fe43e9a58d7a94b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
-@@ -775,7 +775,20 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -772,7 +772,20 @@ public class ServerLevel extends Level implements WorldGenLevel {
                          }
  
                          gameprofilerfiller.push("tick");
@@ -1770,12 +1794,12 @@ index f9ed48f5bbde84fd1804e482f2777b516cc3a1ef..29ce41330bd291a050441fc5aecd7eef
                          gameprofilerfiller.pop();
                      }
                  }
-@@ -835,9 +848,11 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -830,9 +843,11 @@ public class ServerLevel extends Level implements WorldGenLevel {
      }
      // Paper start - optimise random block ticking
      private final BlockPos.MutableBlockPos chunkTickMutablePosition = new BlockPos.MutableBlockPos();
--    private final com.tuinity.tuinity.util.math.ThreadUnsafeRandom randomTickRandom = new com.tuinity.tuinity.util.math.ThreadUnsafeRandom();
-+    private final com.tuinity.tuinity.util.math.ThreadUnsafeRandom randomTickRandom = new com.tuinity.tuinity.util.math.ThreadUnsafeRandom(); public java.util.Random getThreadUnsafeRandom() { return this.randomTickRandom; } // Airplane - getter
+-    private final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom();
++    private final io.papermc.paper.util.math.ThreadUnsafeRandom randomTickRandom = new io.papermc.paper.util.math.ThreadUnsafeRandom(); public java.util.Random getThreadUnsafeRandom() { return this.randomTickRandom; } // Airplane - getter
      // Paper end
  
 +    private int currentIceAndSnowTick = 0; protected void resetIceAndSnowTick() { this.currentIceAndSnowTick = this.randomTickRandom.nextInt(16); } // Airplane
@@ -1783,7 +1807,7 @@ index f9ed48f5bbde84fd1804e482f2777b516cc3a1ef..29ce41330bd291a050441fc5aecd7eef
      public void tickChunk(LevelChunk chunk, int randomTickSpeed) {
          ChunkPos chunkcoordintpair = chunk.getPos();
          boolean flag = this.isRaining();
-@@ -848,7 +863,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -843,7 +858,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
          gameprofilerfiller.push("thunder");
          final BlockPos.MutableBlockPos blockposition = this.chunkTickMutablePosition; // Paper - use mutable to reduce allocation rate, final to force compile fail on change
  
@@ -1792,7 +1816,7 @@ index f9ed48f5bbde84fd1804e482f2777b516cc3a1ef..29ce41330bd291a050441fc5aecd7eef
              blockposition.set(this.findLightningTargetAround(this.getBlockRandomPos(j, 0, k, 15))); // Paper
              if (this.isRainingAt(blockposition)) {
                  DifficultyInstance difficultydamagescaler = this.getCurrentDifficultyAt(blockposition);
-@@ -872,7 +887,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
+@@ -867,7 +882,7 @@ public class ServerLevel extends Level implements WorldGenLevel {
          }
  
          gameprofilerfiller.popPush("iceandsnow");
@@ -1914,10 +1938,10 @@ index 7437f01ca8f416e2c9150250e324af4725a4efb6..bdcd0e38a3ba904811112f41d8bfbfc0
      int LARGE_MAX_STACK_SIZE = 64;
  
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index b4c15376da0ba9c33efe7e7da648690e7a931981..da01861990da0307cfba14cb2492baf7761a3930 100644
+index 94857a736d2a16e8ade286c6f2ddf8bd798008eb..732eb171f6a8fe1b02044a00fcf85217c41116ac 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -336,6 +336,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+@@ -338,6 +338,10 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
      protected int numCollisions = 0; // Paper
      public void inactiveTick() { }
      // Spigot end
@@ -1928,7 +1952,7 @@ index b4c15376da0ba9c33efe7e7da648690e7a931981..da01861990da0307cfba14cb2492baf7
  
      public float getBukkitYaw() {
          return this.yRot;
-@@ -355,17 +359,36 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+@@ -362,17 +366,36 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
          this.isLegacyTrackingEntity = isLegacyTrackingEntity;
      }
  
@@ -1950,7 +1974,7 @@ index b4c15376da0ba9c33efe7e7da648690e7a931981..da01861990da0307cfba14cb2492baf7
 +    }
 +
      public final com.destroystokyo.paper.util.misc.PooledLinkedHashSets.PooledObjectLinkedOpenHashSet<ServerPlayer> getPlayersInTrackRange() {
-         // Tuinity start - determine highest range of passengers
+         // determine highest range of passengers
          if (this.passengers.isEmpty()) {
              return ((ServerLevel)this.level).getChunkSource().chunkMap.playerEntityTrackerTrackMaps[this.trackingRangeType.ordinal()]
                  .getObjectsInRange(MCUtil.getCoordinateKey(this));
@@ -1966,7 +1990,7 @@ index b4c15376da0ba9c33efe7e7da648690e7a931981..da01861990da0307cfba14cb2492baf7
          for (Entity passenger : passengers) {
              org.spigotmc.TrackingRange.TrackingRangeType passengerType = passenger.trackingRangeType;
              int passengerRange = chunkMap.getEntityTrackerRange(passengerType.ordinal());
-@@ -374,6 +397,9 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+@@ -381,6 +404,9 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
                  range = passengerRange;
              }
          }
@@ -1975,33 +1999,33 @@ index b4c15376da0ba9c33efe7e7da648690e7a931981..da01861990da0307cfba14cb2492baf7
 +        // Airplane end
  
          return chunkMap.playerEntityTrackerTrackMaps[type.ordinal()].getObjectsInRange(MCUtil.getCoordinateKey(this));
-         // Tuinity end - determine highest range of passengers
-@@ -2432,9 +2458,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+     }
+@@ -2439,9 +2465,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
  
-             // Tuinity start
-             return com.tuinity.tuinity.util.CollisionUtil.getCollisionsForBlocksOrWorldBorder(this.level, this, axisalignedbb, null,
+             // Paper start
+             return io.papermc.paper.util.CollisionUtil.getCollisionsForBlocksOrWorldBorder(this.level, this, axisalignedbb, null,
 -                false, false, false, true, (iblockdata, blockposition) -> {
 -                    return iblockdata.isSuffocating(this.level, blockposition);
 -            });
 +                false, false, false, true, this.level.isAlmostSuffocating); // Airplane - don't allocate lambda here
-             // Tuinity end
+             // Paper end
          }
      }
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index ac99265aacd4a28490705e3079ed04023fb1c54a..96b881fcb4c3871b2fc00080afc19900b28633f5 100644
+index 1c446dba5de89698397041ee38a2e1a00bec8a56..b896c320c94888813567c1733fcbb5974c889302 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -298,6 +298,8 @@ public class EntityType<T extends Entity> implements EntityTypeTest<Entity, T> {
- 
+@@ -297,6 +297,8 @@ public class EntityType<T extends Entity> implements EntityTypeTest<Entity, T> {
+     // Paper start - add id
      public final String id;
  
 +    public boolean dabEnabled = false; // Airplane
 +
-     public EntityType(EntityType.EntityFactory<T> entitytypes_b, MobCategory enumcreaturetype, boolean flag, boolean flag1, boolean flag2, boolean flag3, ImmutableSet<Block> canSpawnInside, EntityDimensions dimensions, int maxTrackDistance, int trackTickInterval, String id) { // Paper - add id
-         this.factory = entitytypes_b;
-         this.category = enumcreaturetype;
+     public EntityType(EntityType.EntityFactory<T> factory, MobCategory spawnGroup, boolean saveable, boolean summonable, boolean fireImmune, boolean spawnableFarFromPlayer, ImmutableSet<Block> canSpawnInside, EntityDimensions dimensions, int maxTrackDistance, int trackTickInterval) {
+         this(factory, spawnGroup, saveable, summonable, fireImmune, spawnableFarFromPlayer, canSpawnInside, dimensions, maxTrackDistance, trackTickInterval, "custom");
+     }
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index b2e48e16bc944e6c5898f3d415e935c421243e16..f025d03149089a8acdfa55f54b5b754cba4bd4d1 100644
+index 6175360eb2b19c8197cc5b82a09030211afd838b..f0ce1e4364e1a549163c8a3a714fb20df42ae3c3 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
 @@ -142,7 +142,6 @@ import org.bukkit.event.entity.EntityTeleportEvent;
@@ -2046,7 +2070,7 @@ index b2e48e16bc944e6c5898f3d415e935c421243e16..f025d03149089a8acdfa55f54b5b754c
      }
  
 diff --git a/src/main/java/net/minecraft/world/entity/Mob.java b/src/main/java/net/minecraft/world/entity/Mob.java
-index c73f3aa6dd75fe03c7e18180487d7bd6374b6339..c7a400e72ca2aae31ae8882b8df946b14b18e006 100644
+index 8a864238e154e2131834d013652746b7e7a78c97..b8e512e1c4b00b468b2d22add5653b98f4a2c81a 100644
 --- a/src/main/java/net/minecraft/world/entity/Mob.java
 +++ b/src/main/java/net/minecraft/world/entity/Mob.java
 @@ -207,10 +207,10 @@ public abstract class Mob extends LivingEntity {
@@ -2146,7 +2170,7 @@ index 9cbfda029782385d1a7987f5be46d450bd8a758e..d3e97858dacc850012e5585ac44a1aea
  
      public boolean hasAttribute(Attribute attribute) {
 diff --git a/src/main/java/net/minecraft/world/entity/ai/behavior/AcquirePoi.java b/src/main/java/net/minecraft/world/entity/ai/behavior/AcquirePoi.java
-index efe66264ad5717bf3aac0fbda07275fb5571acc1..68188f3322a9af8eac423afc5f87bc4f88f4a5bb 100644
+index afbb2acd27416c801af3d718850b82a170734cd3..0b206a3f964f5143e0720890d78d682b8b558c15 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/behavior/AcquirePoi.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/behavior/AcquirePoi.java
 @@ -68,6 +68,7 @@ public class AcquirePoi extends Behavior<PathfinderMob> {
@@ -2175,7 +2199,7 @@ index 42d466f7f162943886078eba3db18f2dfc2d7bee..32da2d3f87758bee359522769ebbee73
          }
  
 diff --git a/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java b/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java
-index faa53d08a12cc7441c670cae6d301de3f498ffe7..b17f401d723b1466a3b7e05da3dfeebd5cf763c7 100644
+index f779f202985d34cb7e379b0f3d5690dd20f091ba..36b5d504cd864ab30cc239201d6a4a52c9d16b7d 100644
 --- a/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java
 +++ b/src/main/java/net/minecraft/world/entity/ai/goal/GoalSelector.java
 @@ -49,9 +49,12 @@ public class GoalSelector {
@@ -2291,7 +2315,7 @@ index 15787afad42f9299638a1c9e57d26678805f18ee..0d220ea2d2651c46ba60c68bdd8dad31
          this.level.getProfiler().pop();
          this.level.getProfiler().push("goatActivityUpdate");
 diff --git a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
-index 158719d46c96bb733a00e08c8285f41a48406abf..2dac4bc346eb1dde1f8d92c3e5b9648b2c433617 100644
+index 063f3e4c67e6716c9a03dbe4b72eafd32e4f0d53..dae6f7a05426ea31d13c82458b33e20abc2571b6 100644
 --- a/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/item/ItemEntity.java
 @@ -243,10 +243,16 @@ public class ItemEntity extends Entity {
@@ -2561,7 +2585,7 @@ index 6b960f0a31175bcfd8d477ee5b3c4d783303cdd5..3a81d3a58b937c9800cd0be738439cff
          int i = 0;
  
 diff --git a/src/main/java/net/minecraft/world/level/BlockGetter.java b/src/main/java/net/minecraft/world/level/BlockGetter.java
-index ec781ab232d12cedb5f0236860377c4917c576d7..ced4b354e83ad68f8f1aacdefe2f0ce0035bd4a7 100644
+index 6200a8ab4f7b2c40e7139cfb90a62f42c5828de2..f6a8e10347b9a374e2da9d28734b72443555459d 100644
 --- a/src/main/java/net/minecraft/world/level/BlockGetter.java
 +++ b/src/main/java/net/minecraft/world/level/BlockGetter.java
 @@ -73,6 +73,16 @@ public interface BlockGetter extends LevelHeightAccessor {
@@ -2642,10 +2666,10 @@ index e7ca5d6fb8922e7e8065864f736b06056be080a0..833ad6fbedfc275b3fde640b0e873f23
          final String id;
          private final GameRules.Category category;
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 61a4dea715689b0ce9247040db5dd2080ee2e167..496000e65ffd5df5ea23783341dac5e2b9b63d0c 100644
+index b93056b91e7ebd49e6ddb53ccb6c05c056088df9..6f4e6105aa1d6546daa2424f57972fd29db25fa3 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -177,6 +177,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -175,6 +175,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public final Map<Explosion.CacheKey, Float> explosionDensityCache = new HashMap<>(); // Paper - Optimize explosions
      public java.util.ArrayDeque<net.minecraft.world.level.block.RedstoneTorchBlock.Toggle> redstoneUpdateInfos; // Paper - Move from Map in BlockRedstoneTorch to here
  
@@ -2654,7 +2678,7 @@ index 61a4dea715689b0ce9247040db5dd2080ee2e167..496000e65ffd5df5ea23783341dac5e2
      // Paper start - fix and optimise world upgrading
      // copied from below
      public static ResourceKey<DimensionType> getDimensionKey(DimensionType manager) {
-@@ -453,6 +455,91 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -450,6 +452,91 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          return null;
      }
  
@@ -2746,10 +2770,10 @@ index 61a4dea715689b0ce9247040db5dd2080ee2e167..496000e65ffd5df5ea23783341dac5e2
      public boolean isInWorldBounds(BlockPos pos) {
          return pos.isValidLocation(this); // Paper - use better/optimized check
      }
-@@ -988,13 +1075,13 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -985,13 +1072,13 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
          try {
              tickConsumer.accept(entity);
-             MinecraftServer.getServer().executeMidTickTasks(); // Tuinity - execute chunk tasks mid tick
+             MinecraftServer.getServer().executeMidTickTasks(); // Paper - execute chunk tasks mid tick
 -        } catch (Throwable throwable) {
 +        } catch (Throwable throwable) { // Airplane - diff on change ServerLevel.tick
              if (throwable instanceof ThreadDeath) throw throwable; // Paper
@@ -2762,7 +2786,7 @@ index 61a4dea715689b0ce9247040db5dd2080ee2e167..496000e65ffd5df5ea23783341dac5e2
              // Paper end
          }
      }
-@@ -1448,6 +1535,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -1445,6 +1532,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      }
  
      public ProfilerFiller getProfiler() {
@@ -2771,7 +2795,7 @@ index 61a4dea715689b0ce9247040db5dd2080ee2e167..496000e65ffd5df5ea23783341dac5e2
      }
  
 diff --git a/src/main/java/net/minecraft/world/level/NaturalSpawner.java b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
-index c6821bfb28b582733cd977864c28ca5cf0c69872..ea77694307e5972b6c9ecf5f23515885974ed493 100644
+index 403f50ef908f65c62d4aaa7e5328faa0a7654480..e5fa91b5e19edab169b361865e7a6b2742c9ca4b 100644
 --- a/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 +++ b/src/main/java/net/minecraft/world/level/NaturalSpawner.java
 @@ -407,12 +407,12 @@ public final class NaturalSpawner {
@@ -2909,7 +2933,7 @@ index 52de9852f87d346714a950b60a0004d386ac10f0..305a8f5ea917c7e242011fa98a3e1615
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
-index a3f0e2ab3eeebeb7c43fda3ddb1f16f8696255d3..99e75feae404d8812f55d562acb11af94330e2c1 100644
+index d41851f9119c334cae3fc2c433d6450a3eed9096..ddf82e65d3ef1f53b72017bf5159b9f7b5484632 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/HopperBlockEntity.java
 @@ -44,7 +44,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
@@ -3002,8 +3026,8 @@ index a3f0e2ab3eeebeb7c43fda3ddb1f16f8696255d3..99e75feae404d8812f55d562acb11af9
 +            boolean flag1 = to.isCompletelyEmpty(enumdirection); // Airplane
  
              if (itemstack1.isEmpty()) {
-                 int originalCount = stack.getCount(); // Paper
-@@ -735,7 +758,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
+                 // Spigot start - SPIGOT-6693, InventorySubcontainer#setItem
+@@ -731,7 +754,7 @@ public class HopperBlockEntity extends RandomizableContainerBlockEntity implemen
  
      @Override
      protected void setItems(NonNullList<ItemStack> list) {
@@ -3032,12 +3056,12 @@ index ed3518fe7c841d9e1a9c97626acaa3d765a6d76f..ac564148956beb984650341c5c099457
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-index 4f6a356e3a27915f1d95132a0a5fddb163735cf6..b2e71a78424dbe1ce87b982b073d8534de890181 100644
+index 86686c24b0b7de4b4bfadbc77419a8872a8e86ee..e265980f07d95a7912bf8873819033e51ef04c98 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 @@ -172,11 +172,25 @@ public class LevelChunk implements ChunkAccess {
      }
-     // Tuinity end - rewrite light engine
+     // Paper end - rewrite light engine
  
 +    // Airplane start - instead of using a random every time the chunk is ticked, define when lightning strikes preemptively
 +    private int lightningTick;
@@ -3058,7 +3082,7 @@ index 4f6a356e3a27915f1d95132a0a5fddb163735cf6..b2e71a78424dbe1ce87b982b073d8534
  
      public LevelChunk(Level world, ChunkPos pos, ChunkBiomeContainer biomes, UpgradeData upgradeData, TickList<Block> blockTickScheduler, TickList<Fluid> fluidTickScheduler, long inhabitedTime, @Nullable LevelChunkSection[] sections, @Nullable Consumer<LevelChunk> loadToWorldConsumer) {
 +        this.levelHeight = world.getHeight(); this.minBuildHeight = world.getMinBuildHeight(); // Airplane
-         // Tuinity start
+         // Paper start
          this.blockNibbles = StarLightEngine.getFilledEmptyLight(world);
          this.skyNibbles = StarLightEngine.getFilledEmptyLight(world);
 @@ -220,6 +234,7 @@ public class LevelChunk implements ChunkAccess {
@@ -3092,7 +3116,7 @@ index 4f6a356e3a27915f1d95132a0a5fddb163735cf6..b2e71a78424dbe1ce87b982b073d8534
  
      @Override
 diff --git a/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java b/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java
-index ebeb3e3b0619b034a9681da999e9ac33cc241718..5b5ada474cff54b424946fc628d30f25a6774684 100644
+index c9e942669458668a184aaec3bc0a5509dd6ab5f0..178e56ffc87ea2beb4d84d1f278f4acf90102379 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/PalettedContainer.java
 @@ -263,13 +263,17 @@ public class PalettedContainer<T> implements PaletteResize<T> {
@@ -3115,10 +3139,10 @@ index ebeb3e3b0619b034a9681da999e9ac33cc241718..5b5ada474cff54b424946fc628d30f25
              for(int j = 0; j < 4096; ++j) {
                  T object2 = this.get(j);
 diff --git a/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java b/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
-index 9815a91040e7cbcbcd171e68b0a935ea26ff8a2a..384897c21ea16b5760d9218c292dd29c9dceeab7 100644
+index 7921ee2786d0d6a60d43786b20efc03a0f9178e3..9ea4229f58679c6c833762fc6a50471445ff0b9d 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/storage/ChunkSerializer.java
-@@ -485,6 +485,7 @@ public class ChunkSerializer {
+@@ -500,6 +500,7 @@ public class ChunkSerializer {
          return new AsyncSaveData(blockLight, skyLight, blockTickListSerialized, fluidTickListSerialized, blockEntitiesSerialized, world.getGameTime());
      }
  
@@ -3126,7 +3150,7 @@ index 9815a91040e7cbcbcd171e68b0a935ea26ff8a2a..384897c21ea16b5760d9218c292dd29c
      public static CompoundTag write(ServerLevel world, ChunkAccess chunk) {
          return saveChunk(world, chunk, null);
      }
-@@ -518,6 +519,7 @@ public class ChunkSerializer {
+@@ -533,6 +534,7 @@ public class ChunkSerializer {
          ThreadedLevelLightEngine lightenginethreaded = world.getChunkSource().getLightEngine();
          boolean flag = chunk.isLightCorrect();
  
@@ -3134,7 +3158,7 @@ index 9815a91040e7cbcbcd171e68b0a935ea26ff8a2a..384897c21ea16b5760d9218c292dd29c
          for (int i = lightenginethreaded.getMinLightSection(); i < lightenginethreaded.getMaxLightSection(); ++i) {
              int finalI = i; // CraftBukkit - decompile errors
              LevelChunkSection chunksection = (LevelChunkSection) Arrays.stream(achunksection).filter((chunksection1) -> {
-@@ -532,7 +534,7 @@ public class ChunkSerializer {
+@@ -547,7 +549,7 @@ public class ChunkSerializer {
  
                  nbttagcompound2.putByte("Y", (byte) (i & 255));
                  if (chunksection != LevelChunk.EMPTY_SECTION) {
@@ -3142,7 +3166,7 @@ index 9815a91040e7cbcbcd171e68b0a935ea26ff8a2a..384897c21ea16b5760d9218c292dd29c
 +                    chunksection.getStates().write(nbttagcompound2, "Palette", "BlockStates", is); // Airplane - reuse array
                  }
  
-                 // Tuinity start - replace light engine
+                 // Paper start - replace light engine
 diff --git a/src/main/java/net/minecraft/world/level/entity/LevelEntityGetter.java b/src/main/java/net/minecraft/world/level/entity/LevelEntityGetter.java
 index da1ad0b2679e392ed81b50c15f012c63cb5c939e..81e83022421e2c311c32f6e6007cfc0c82efb822 100644
 --- a/src/main/java/net/minecraft/world/level/entity/LevelEntityGetter.java
@@ -3170,7 +3194,7 @@ index 3b13f6ea36a3bfecabe09221eb5c48dddab119db..c02b9104c0cc1a7319cca29d5e32a5c2
      @Override
      public T get(int id) {
 diff --git a/src/main/java/net/minecraft/world/level/material/FlowingFluid.java b/src/main/java/net/minecraft/world/level/material/FlowingFluid.java
-index 6e3e873efa1f50f53cb6503bde8a981f9cefd006..32d15354ceb46fb06b1c36049d3a8bfba718acaf 100644
+index 7fda7da544b2d0bbd3803d88ee34c92350a8b8ef..adf91f3006a2d224c957f08520f93f761c3ba832 100644
 --- a/src/main/java/net/minecraft/world/level/material/FlowingFluid.java
 +++ b/src/main/java/net/minecraft/world/level/material/FlowingFluid.java
 @@ -45,6 +45,8 @@ public abstract class FlowingFluid extends Fluid {
@@ -3381,19 +3405,19 @@ index fcb7bd9f3b6b6ada0f2e5692bce32ab76b8798a7..61c2096f2c034dbc3ad33b193b058c7d
      }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 57dab1be4bfa91c7c9d7e53e7fe388a94dc60e0b..fe5eac5f01461c9ca81301142218aa131475dfe7 100644
+index 4687827c096ecf8872ab39b00fbf9261ba5c3689..fe1b046f707ee145327475b7f923928f4dfcad05 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -240,7 +240,7 @@ import javax.annotation.Nullable; // Paper
+@@ -246,7 +246,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
--    private final String serverName = "Tuinity"; // Tuinity // Paper
-+    private final String serverName = "Airplane"; // Airplane // Tuinity // Paper
+-    private final String serverName = "Paper"; // Paper
++    private final String serverName = "Airplane"; // Paper // Airplane
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
-@@ -997,6 +997,11 @@ public final class CraftServer implements Server {
+@@ -1001,6 +1001,11 @@ public final class CraftServer implements Server {
                  plugin.getDescription().getName(),
                  "This plugin is not properly shutting down its async tasks when it is being shut down. This task may throw errors during the final shutdown logs and might not complete before process dies."
              ));
@@ -3418,10 +3442,10 @@ index 0b3b46348ac9195bff1492ffc11fcbff7d3f5c6f..4010052c53f3a2831b4d5aa1c041d858
      }
  }
 diff --git a/src/main/java/org/bukkit/craftbukkit/scheduler/MinecraftInternalPlugin.java b/src/main/java/org/bukkit/craftbukkit/scheduler/MinecraftInternalPlugin.java
-index 49dc0c441b9dd7e7745cf15ced67f383ebee1f99..b343d8ee7435312929558efdaf127334d8e2fff6 100644
+index 909b2c98e7a9117d2f737245e4661792ffafb744..9da898c6f44832b4421b8c2745e3121bd13a71ab 100644
 --- a/src/main/java/org/bukkit/craftbukkit/scheduler/MinecraftInternalPlugin.java
 +++ b/src/main/java/org/bukkit/craftbukkit/scheduler/MinecraftInternalPlugin.java
-@@ -19,7 +19,8 @@ public class MinecraftInternalPlugin extends PluginBase {
+@@ -22,7 +22,8 @@ public class MinecraftInternalPlugin extends PluginBase {
      private boolean enabled = true;
  
      private final String pluginName;
@@ -3431,7 +3455,7 @@ index 49dc0c441b9dd7e7745cf15ced67f383ebee1f99..b343d8ee7435312929558efdaf127334
  
      public MinecraftInternalPlugin() {
          this.pluginName = "Minecraft";
-@@ -72,7 +73,12 @@ public class MinecraftInternalPlugin extends PluginBase {
+@@ -75,7 +76,12 @@ public class MinecraftInternalPlugin extends PluginBase {
  
      @Override
      public PluginLogger getLogger() {
@@ -3445,7 +3469,7 @@ index 49dc0c441b9dd7e7745cf15ced67f383ebee1f99..b343d8ee7435312929558efdaf127334
      }
  
      @Override
-@@ -82,7 +88,7 @@ public class MinecraftInternalPlugin extends PluginBase {
+@@ -85,7 +91,7 @@ public class MinecraftInternalPlugin extends PluginBase {
  
      @Override
      public Server getServer() {
@@ -3467,20 +3491,20 @@ index d752720f2f234b9dbd2117333fee1bfad663ec02..9868b3a9a35cea9689c76ea9b62f2732
              // Paper start - try to shutdown on main
              server.safeShutdown(false, false);
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 001b1e5197eaa51bfff9031aa6c69876c9a47960..1788d79ea489e446d3d9f541693d4ba3dfc26015 100644
+index 774556a62eb240da42e84db4502e2ed43495be17..1788d79ea489e446d3d9f541693d4ba3dfc26015 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
      public static String getBukkitVersion() {
          String result = "Unknown-Version";
  
--        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.tuinity/tuinity-api/pom.properties"); // Tuinity
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/io.papermc.paper/paper-api/pom.properties");
 +        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/gg.airplane/airplane-api/pom.properties"); // Tuinity // Airplane
          Properties properties = new Properties();
  
          if (stream != null) {
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index 966639cc6ba6684bfb52e91ac047808cf4d003e4..0d56df555b8d2de12447cc2e869c9eba20c5ea6d 100644
+index b5da2f39ff6e2e7cb519c5d22be6ae4d77dc60ab..79c9f8e81f6592e6d922f6fdfe088a4dd54d44f8 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -37,6 +37,10 @@ import co.aikar.timings.MinecraftTimings;
@@ -3514,7 +3538,7 @@ index 966639cc6ba6684bfb52e91ac047808cf4d003e4..0d56df555b8d2de12447cc2e869c9eba
 +                // Airplane end
 +
              }
-             // Tuinity end
+             // Paper end
          }
 @@ -226,12 +245,12 @@ public class ActivationRange
          if ( MinecraftServer.currentTick > entity.activatedTick )
@@ -3531,7 +3555,7 @@ index 966639cc6ba6684bfb52e91ac047808cf4d003e4..0d56df555b8d2de12447cc2e869c9eba
                  entity.activatedTick = MinecraftServer.currentTick;
              }
          }
-@@ -276,7 +295,7 @@ public class ActivationRange
+@@ -279,7 +298,7 @@ public class ActivationRange
          if ( entity instanceof LivingEntity )
          {
              LivingEntity living = (LivingEntity) entity;

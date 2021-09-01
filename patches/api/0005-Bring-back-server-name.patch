@@ -25,10 +25,10 @@ index d36e4bc3c3713407704b865574cba28662f17315..fc956758335734ac89e86e9c5fbbb6cc
 +    // Purpur end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 6aa18a3ff909b1b24082b5fe4f71d82d67a2354a..b1c470734a48e3895e805b49c74809d46a005664 100644
+index 7347636e2845f7723706ab280c2a788302c67854..6f809515d87d70cc824f7414fa48de07fec4f726 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -1809,4 +1809,13 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -1801,4 +1801,13 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
      @NotNull
      io.papermc.paper.datapack.DatapackManager getDatapackManager();
      // Paper end

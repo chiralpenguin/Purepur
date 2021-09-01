@@ -5,7 +5,7 @@ Subject: [PATCH] Change Airplane defaults closer to vanilla
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index cba14fd282d1294eba4581336c5e438484df76f9..5b4000d1f63e2b028e7a4450dcd084eb507f7f91 100644
+index 0f0b0bbcc0e47b8fe3e1e5d4a4ef0eed389d020b..9364b58d2dc9ab199ac4303806a799d158e3fbe4 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -202,7 +202,7 @@ public class PaperConfig {

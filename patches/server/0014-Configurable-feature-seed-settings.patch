@@ -835,10 +835,10 @@ index ed3944a60d09495eb424dd11d00e8c3585177d51..fcf25cc905ece0213a0eb6365a0a5756
              return false;
          } else {
 diff --git a/src/main/java/net/pl3x/purpur/PurpurConfig.java b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-index 1c57121388ffa7cdbdcc210f2e6bb9f824cebb3e..e56fe628e650438e290dbeb077719aaa13cfb337 100644
+index 77c2831cf35287defba38691731126445a79106d..69ae45567c54a81ae1d5ed2733eaca834ba25805 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurConfig.java
 +++ b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-@@ -156,6 +156,116 @@ public class PurpurConfig {
+@@ -157,6 +157,128 @@ public class PurpurConfig {
          return builder.build();
      }
  
@@ -896,6 +896,17 @@ index 1c57121388ffa7cdbdcc210f2e6bb9f824cebb3e..e56fe628e650438e290dbeb077719aaa
 +    public static int seedFeatureWaterloggedVegetationPatch = -1;
 +    public static int seedFeatureWeepingVines = -1;
 +    private static void seedSettings() {
++        if (version < 14) {
++            int oldValue = getInt("settings.seed.dungeon", -1);
++            set("settings.seed.feature.monster_room", oldValue);
++            set("settings.seed.dungeon", null);
++            oldValue = getInt("settings.seed.end-spike", -1);
++            set("settings.seed.feature.end_spike", oldValue);
++            set("settings.seed.end-spike", null);
++            oldValue = getInt("settings.seed.geode", -1);
++            set("settings.seed.feature.geode", oldValue);
++            set("settings.seed.geode", null);
++        }
 +        seedFeatureBamboo = getInt("settings.seed.feature.bamboo", seedFeatureBamboo);
 +        seedFeatureBasaltColumns = getInt("settings.seed.feature.basalt_columns", seedFeatureBasaltColumns);
 +        seedFeatureBasaltPillar = getInt("settings.seed.feature.basalt_pillar", seedFeatureBasaltPillar);
@@ -952,6 +963,7 @@ index 1c57121388ffa7cdbdcc210f2e6bb9f824cebb3e..e56fe628e650438e290dbeb077719aaa
 +        // hide these from timings report
 +        if (!TimingsManager.hiddenConfigs.contains("settings.seed")) TimingsManager.hiddenConfigs.add("settings.seed");
 +    }
-     public static String serverModName = "Purpur";
-     private static void serverModName() {
-         serverModName = getString("settings.server-mod-name", serverModName);
++
+     private static void timingsSettings() {
+         if (version < 18) {
+             String oldVal = getString("settings.timings.url", "https://timings.pl3x.net");

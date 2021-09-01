@@ -5,12 +5,12 @@ Subject: [PATCH] Purpur config files
 
 
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index d6607c1cc3b976367f0087810de698281d4733ab..6aa18a3ff909b1b24082b5fe4f71d82d67a2354a 100644
+index 83870d54a5ff1017ad7455e9c931fdee54354434..7347636e2845f7723706ab280c2a788302c67854 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -1687,6 +1687,18 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -1679,6 +1679,18 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
          }
-         // Tuinity end - add config to timings report
+         // Paper end
  
 +        // Purpur start
 +        @NotNull

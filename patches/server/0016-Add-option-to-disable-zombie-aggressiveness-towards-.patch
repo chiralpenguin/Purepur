@@ -71,10 +71,10 @@ index 6408e158745c20ab449c44a28420bc9b28e1efac..63bbd05588b144e499f0c7f4b13eca93
          this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Turtle.class, 10, true, false, Turtle.BABY_ON_LAND_SELECTOR));
      }
 diff --git a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-index 2f1f6aa8b7d54a75b34a67f9efbaab26d7eb5ee3..1a195ebc1fb9497a09921a63821828058ca5c360 100644
+index 19675ebd17aa597854157dfd81b25e0afb724fe7..10532d26d61b03d03a9a748fb939e9f582de9cd4 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
 +++ b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-@@ -129,4 +129,9 @@ public class PurpurWorldConfig {
+@@ -133,4 +133,9 @@ public class PurpurWorldConfig {
          villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
          villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
      }

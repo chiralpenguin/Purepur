@@ -489,7 +489,7 @@ index 3afd5f5c0208a4ee93b5dbfc2aab2b9d2e8a7544..7838731e0e16bdccfb79e74ceb64148f
  
      /**
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 0b68d0bd03822ed90effc4e57d288973f3164f16..86141c856478c6b39f7ef52f590a68e564da1ba9 100644
+index 573e0e4dc692952035221a5222ca106e12461310..6962b1d13fc6fdda973ba12cb2bba5553ce5ae50 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -1652,6 +1652,9 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
@@ -566,10 +566,10 @@ index afb7b136b461202026290624836446cff9f9e45d..087579fdff09237409c9f80446e7a15a
  
      /**
 diff --git a/src/main/java/org/bukkit/WorldCreator.java b/src/main/java/org/bukkit/WorldCreator.java
-index c0454d977119b28115b7698a2c4287f0f56efa55..445c1c13a85f7abb5fd319f9aeb05572bb1f63f6 100644
+index 14986911b4d0099ea2c91ab2196a771b7dee4c50..d1eed20ea3b27f0800a08b42b62aac401bfe7347 100644
 --- a/src/main/java/org/bukkit/WorldCreator.java
 +++ b/src/main/java/org/bukkit/WorldCreator.java
-@@ -71,6 +71,8 @@ public class WorldCreator {
+@@ -73,6 +73,8 @@ public class WorldCreator {
       *
       * @param levelName LevelName of the world that will be created
       * @param worldKey NamespacedKey of the world that will be created
@@ -578,7 +578,7 @@ index c0454d977119b28115b7698a2c4287f0f56efa55..445c1c13a85f7abb5fd319f9aeb05572
       */
      @NotNull
      public static WorldCreator ofNameAndKey(@NotNull String levelName, @NotNull NamespacedKey worldKey) {
-@@ -82,6 +84,8 @@ public class WorldCreator {
+@@ -84,6 +86,8 @@ public class WorldCreator {
       * LevelName will be the Key part of the NamespacedKey.
       *
       * @param worldKey NamespacedKey of the world that will be created
@@ -927,10 +927,10 @@ index a6a7429ed2e1eefb2b12b7480ed74fcc3963a864..e8027e1d505dda6effbb1698550016e8
  
          NORMAL(false),
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index c87cb640dc829a266e85e97a2e3bb2f0f52a2eaa..3fd5a131fd39a825774ab1e299c812a85c6db171 100644
+index 436c42649395fd6df3425c2ddeb85a99edf9c1c4..281ade102b57f57a372837dc358fb26a95273a66 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -2121,6 +2121,8 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -2115,6 +2115,8 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      void resetCooldown();
  
      /**
@@ -939,7 +939,7 @@ index c87cb640dc829a266e85e97a2e3bb2f0f52a2eaa..3fd5a131fd39a825774ab1e299c812a8
       * @return the client option value of the player
       */
      @NotNull
-@@ -2160,6 +2162,9 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -2154,6 +2156,9 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      // Paper end
  
      // Spigot start
@@ -1088,7 +1088,7 @@ index 84638e852501cc804c13c188c90c38b163657c36..a32f7d86407a36d34932101a8b46751c
      private static final long serialVersionUID = 3532808232324183999L;
      private final Throwable cause;
 diff --git a/src/main/java/org/bukkit/event/block/Action.java b/src/main/java/org/bukkit/event/block/Action.java
-index 25d26e3fe713311e66d7e634a6c32af61f4cef59..2825263c102d3f9ed37f6884e09ec5efb8105fb9 100644
+index f0b672bbfcd0eb17f3953ffcd0e728f5b3ec909b..4574b956ed76d5e36fc092d25d29a40c1d1bbb40 100644
 --- a/src/main/java/org/bukkit/event/block/Action.java
 +++ b/src/main/java/org/bukkit/event/block/Action.java
 @@ -1,5 +1,8 @@

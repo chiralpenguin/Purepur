@@ -5,10 +5,10 @@ Subject: [PATCH] Timings stuff
 
 
 diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index 4cd8116fd623fbc9e175986526d3ae51a72b76e0..0e86ceb4d70c45835c9d1c6ca0908fdddf14d55a 100644
+index da6a5b1b2f5203a0fab8e4fccd727951df7c9c9a..bca3bc0b8687940dff181bab6a5a2a3c11423358 100644
 --- a/src/main/java/co/aikar/timings/TimingsExport.java
 +++ b/src/main/java/co/aikar/timings/TimingsExport.java
-@@ -226,11 +226,15 @@ public class TimingsExport extends Thread {
+@@ -226,10 +226,14 @@ public class TimingsExport extends Thread {
          // Information on the users Config
  
          parent.put("config", createObject(
@@ -17,16 +17,15 @@ index 4cd8116fd623fbc9e175986526d3ae51a72b76e0..0e86ceb4d70c45835c9d1c6ca0908fdd
 +            pair("server.properties", mapAsJSON(Bukkit.spigot().getServerProperties())),
              pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
 +            pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
-             pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)), // Tuinity - add config to timings report
-             pair("tuinity", mapAsJSON(Bukkit.spigot().getTuinityConfig(), null)), // Tuinity - add config to timings report
--            pair("airplane", mapAsJSON(gg.airplane.AirplaneConfig.getConfigCopy(), null))
-+            pair("airplane", mapAsJSON(gg.airplane.AirplaneConfig.getConfigCopy(), null)),
+             pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)), // Airplane
+-            pair("airplane", mapAsJSON(gg.airplane.AirplaneConfig.getConfigCopy(), null)) // Airplane
++            pair("airplane", mapAsJSON(gg.airplane.AirplaneConfig.getConfigCopy(), null)), // Airplane
 +            pair("purpur", mapAsJSON(Bukkit.spigot().getPurpurConfig(), null))
 +            // Purpur end
          ));
  
          new TimingsExport(listeners, parent, history).start();
-@@ -271,6 +275,19 @@ public class TimingsExport extends Thread {
+@@ -270,6 +274,19 @@ public class TimingsExport extends Thread {
          return timingsCost;
      }
  
@@ -47,7 +46,7 @@ index 4cd8116fd623fbc9e175986526d3ae51a72b76e0..0e86ceb4d70c45835c9d1c6ca0908fdd
  
          JSONObject object = new JSONObject();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index b294fa10dc0fa804b94757eaa3becb104f20565a..aed391418d867e79d7236a3a3d8de54cb35807b1 100644
+index 5cb4635690efd400853ab6378886642dd3bf2983..7029aa4aa8180caa91b1f3141012a5618d4598b3 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -217,7 +217,7 @@ public class PaperConfig {
@@ -60,18 +59,10 @@ index b294fa10dc0fa804b94757eaa3becb104f20565a..aed391418d867e79d7236a3a3d8de54c
              TimingsManager.url += "/";
          }
 diff --git a/src/main/java/net/pl3x/purpur/PurpurConfig.java b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-index faa4ad6af45ce1ef62084194340c6789634bff5f..b23bd7a3e7dc6d67b9314dd70e06559243772a28 100644
+index 50dd18f72d7ec674a33049ad2e228f7d8a4054a5..583583bf6fbab700d0662249bfc39dda70acd94f 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurConfig.java
 +++ b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-@@ -8,7 +8,6 @@ import net.minecraft.server.MinecraftServer;
- import net.minecraft.world.entity.EntityDimensions;
- import net.minecraft.world.entity.EntityType;
- import net.pl3x.purpur.command.PurpurCommand;
--import net.pl3x.purpur.task.TPSBarTask;
- import org.bukkit.Bukkit;
- import org.bukkit.command.Command;
- import org.bukkit.configuration.ConfigurationSection;
-@@ -156,4 +155,17 @@ public class PurpurConfig {
+@@ -156,4 +156,17 @@ public class PurpurConfig {
          }
          return builder.build();
      }

@@ -24,10 +24,10 @@ index fc956758335734ac89e86e9c5fbbb6cc965d0e59..39490406f914a5082d9d4b3937d9df63
      // Purpur end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index b1c470734a48e3895e805b49c74809d46a005664..0b68d0bd03822ed90effc4e57d288973f3164f16 100644
+index 6f809515d87d70cc824f7414fa48de07fec4f726..573e0e4dc692952035221a5222ca106e12461310 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -1817,5 +1817,12 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -1809,5 +1809,12 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
       */
      @NotNull
      String getServerName();
