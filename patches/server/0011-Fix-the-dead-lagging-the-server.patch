@@ -5,22 +5,22 @@ Subject: [PATCH] Fix the dead lagging the server
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 5d455a662107182659abcbe83195ac5d6cf25813..cbf30dfc47b27188f8fefad27f3a85c78b3bb2b3 100644
+index 2856de51e1f12ea2d5a04dabbb212ca302156aa6..463b960116186a7fc8f6086e7af8947f51a37d8c 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1768,6 +1768,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
-         this.setXRot(Mth.clamp(pitch, -90.0F, 90.0F) % 360.0F);
+@@ -1769,6 +1769,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
          this.yRotO = this.getYRot();
          this.xRotO = this.getXRot();
+         this.setYHeadRot(yaw); // Paper - Update head rotation
 +        if (valid && !this.isRemoved()) level.getChunk((int) Math.floor(this.getX()) >> 4, (int) Math.floor(this.getZ()) >> 4); // CraftBukkit // Paper // Purpur
      }
  
      public void absMoveTo(double x, double y, double z) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 8347b13e515e306253ca2a1f79001e1aced30c2a..5167bcbced5d094b1588ab0088a4da78ef858920 100644
+index 5905f02cb695ca619ebcd13cad2fc6dff564f5d9..79968e5554970ee8da58b15c6eeee153781819a1 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -2892,7 +2892,7 @@ public abstract class LivingEntity extends Entity {
+@@ -2891,7 +2891,7 @@ public abstract class LivingEntity extends Entity {
              }
          }
  
