@@ -5,7 +5,7 @@ Subject: [PATCH] Fix imports
 
 
 diff --git a/src/main/java/net/pl3x/purpur/PurpurConfig.java b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-index 341f1cf97fc216acad30c8405cb853bcd8ed1e3a..8378f7eef3212c2b699e5597038c221b74f34179 100644
+index 53b4be7e95feca48e2bf540755c0f2bd2e114888..676509501ecfb8882d2771a4a3b7bfb12b28e1e3 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurConfig.java
 +++ b/src/main/java/net/pl3x/purpur/PurpurConfig.java
 @@ -3,12 +3,8 @@ package net.pl3x.purpur;
@@ -22,7 +22,7 @@ index 341f1cf97fc216acad30c8405cb853bcd8ed1e3a..8378f7eef3212c2b699e5597038c221b
  import org.bukkit.command.Command;
  import org.bukkit.configuration.ConfigurationSection;
 diff --git a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-index d2996fa79bd2f08baae73448879620bbb56385b2..4278ee0c9de1845e3196f2e91dd2616a1082251f 100644
+index 8f9bf598b5de00e9bc54d6e7ee4594ec16dd2070..ba7091b7c50ae72c81a9bbab271812fb382f57b3 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
 +++ b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
 @@ -1,32 +1,11 @@

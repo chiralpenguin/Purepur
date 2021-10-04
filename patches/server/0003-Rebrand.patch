@@ -5,7 +5,7 @@ Subject: [PATCH] Rebrand
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 8a4c00b978b289d162321a043efb0a5ca4c9ef4a..f19bc57de300c2bad9a21499123bfa9a57f7ad3a 100644
+index c1e70d5f127804deabcf626b725390863e896d38..f1f0ead86c21194c3068173566cf84a6fc177554 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -32,7 +32,7 @@ repositories {
@@ -25,7 +25,7 @@ index 8a4c00b978b289d162321a043efb0a5ca4c9ef4a..f19bc57de300c2bad9a21499123bfa9a
  
      implementation("org.quiltmc:tiny-mappings-parser:0.3.0") // Paper - needed to read mappings for stacktrace deobfuscation
      implementation("com.velocitypowered:velocity-native:1.1.0-SNAPSHOT") // Paper
-@@ -89,8 +90,7 @@ tasks.jar {
+@@ -92,8 +93,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
@@ -147,20 +147,20 @@ index e0b1f0671d16ddddcb6725acd25a1d1d69e42701..8c3c68465197fafc14849dc38a572e30
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 635ccc60d32333e178b28faae9c26de107b380d7..e3d8caadffecde0b46e52ba1ef5175f623e1cd15 100644
+index f6d335b377dbf6f744e5f6ced56cf437e6e6bab3..2c01626bd609441babf95156b8397bc51267ec80 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1721,7 +1721,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
--        return "Airplane"; // Airplane - Airplane > //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "Purpur"; // Purpur - Purpur > // Airplane - Airplane > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+-        return "Airplane"; // Airplane // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "Purepur"; // Purpur - Purpur > // Airplane - Airplane > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 8242200f073aee40482b190c7c0aafd5320ac4fe..f15a8118880ee3c9a71f450a84b873aa076c6350 100644
+index 2a569d05edf0f5337afbcd6803c0513d338ca55e..d7b8f37dfdc8967e52136dbcebb8532498e40232 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -283,11 +283,12 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -179,7 +179,7 @@ index 8242200f073aee40482b190c7c0aafd5320ac4fe..f15a8118880ee3c9a71f450a84b873aa
              // Spigot end
              DedicatedServer.LOGGER.warn("To change this, set \"online-mode\" to \"true\" in the server.properties file.");
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index fe1b046f707ee145327475b7f923928f4dfcad05..c757e4fe3e511f699512dccbcb11137fab82ea5e 100644
+index 28fa8e5c0d1e78d57d9cfb5ea2998740b8d700dc..b6805922b1a59e35ad4f3bd3cc5646a2b7c8fa21 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -246,7 +246,7 @@ import javax.annotation.Nullable; // Paper

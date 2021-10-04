@@ -674,7 +674,7 @@ index 70274f2e2a1d6f27c4febd9d5d5fa3ee1b49f100..3b98e6e3e6dea0df5fb9462c78e8c142
  
      /**
 diff --git a/src/main/java/org/bukkit/command/CommandSender.java b/src/main/java/org/bukkit/command/CommandSender.java
-index 096dca3b733688dcc17669d78efbc5115f9b6e4a..63fbe3197918aaeab49d0397d2873dc91e3204e7 100644
+index 39ce012fcf2b22471a2ace9218f4f696ec93f466..4c6b35c9d8c046b3b3e0cea5063e0e3d9f2fa946 100644
 --- a/src/main/java/org/bukkit/command/CommandSender.java
 +++ b/src/main/java/org/bukkit/command/CommandSender.java
 @@ -62,6 +62,9 @@ public interface CommandSender extends net.kyori.adventure.audience.Audience, Pe
@@ -730,7 +730,7 @@ index 2e17b2d4f759531fbe9ee8e9b00c839186af09ca..9382234722792b5920a2456187e07958
  
      /**
 diff --git a/src/main/java/org/bukkit/entity/ArmorStand.java b/src/main/java/org/bukkit/entity/ArmorStand.java
-index 21c8ec6d8b795799b5b110be57ffd27fc8dcabe3..d3eb843fb6a7257152120371c4f317133f63de4d 100644
+index 707639096657f995cc812c7b50108eeed48e8181..433590c94c54e40abec2b447bf54ab0b188352d4 100644
 --- a/src/main/java/org/bukkit/entity/ArmorStand.java
 +++ b/src/main/java/org/bukkit/entity/ArmorStand.java
 @@ -7,6 +7,9 @@ import org.bukkit.util.EulerAngle;
@@ -793,7 +793,7 @@ index 9e7f42caab1204036f4203354c115fd40c6def92..f76ddd80f9fc926f73b1cc50f0a2767a
  
      /**
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
-index a9e455c5b3bbe4edbdb71f86f5c6eebc2f605547..724f33bda5bf7074bf558c0754543e27f42c4255 100644
+index b02704b0535522c5535b560105eec2885fdd3e77..1260210f74d300e9d7b751f69736a5ad3613e100 100644
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
 @@ -668,6 +668,9 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
@@ -806,7 +806,7 @@ index a9e455c5b3bbe4edbdb71f86f5c6eebc2f605547..724f33bda5bf7074bf558c0754543e27
      public class Spigot extends CommandSender.Spigot {
  
      }
-@@ -720,36 +723,50 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+@@ -728,36 +731,50 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
  
      /**
       * Check if entity is in rain
@@ -927,10 +927,10 @@ index a6a7429ed2e1eefb2b12b7480ed74fcc3963a864..e8027e1d505dda6effbb1698550016e8
  
          NORMAL(false),
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index afa245018192a63e5db8bc568ddea2790bf5b8a2..a397f57032dbdc954fa989ca14987e609d54c9c9 100644
+index 3e8cd3971ac8256a40d9b85cd7514998c965512c..34008a4263d68c99e879d5961d6cc44ce406080b 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -2115,6 +2115,8 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -2117,6 +2117,8 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      void resetCooldown();
  
      /**
@@ -939,7 +939,7 @@ index afa245018192a63e5db8bc568ddea2790bf5b8a2..a397f57032dbdc954fa989ca14987e60
       * @return the client option value of the player
       */
      @NotNull
-@@ -2154,6 +2156,9 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -2156,6 +2158,9 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      // Paper end
  
      // Spigot start
