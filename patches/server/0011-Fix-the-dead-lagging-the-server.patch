@@ -5,10 +5,10 @@ Subject: [PATCH] Fix the dead lagging the server
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 2856de51e1f12ea2d5a04dabbb212ca302156aa6..463b960116186a7fc8f6086e7af8947f51a37d8c 100644
+index d35cdcf2ee7568ad5caf52588db54e9c6f607d4b..3b3cb65d56b0d0de13ae165ebdc138e24b954cc2 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -1769,6 +1769,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
+@@ -1772,6 +1772,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
          this.yRotO = this.getYRot();
          this.xRotO = this.getXRot();
          this.setYHeadRot(yaw); // Paper - Update head rotation

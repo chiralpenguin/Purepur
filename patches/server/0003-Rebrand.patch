@@ -5,7 +5,7 @@ Subject: [PATCH] Rebrand
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index d28ed33187f146bbaad6ebd4247cd798d84b3173..08a12fa2efd5df89bdbb31d4248b10b196178642 100644
+index fdc3f2390d8d0124102cbff386e8a981c6f92c22..08a12fa2efd5df89bdbb31d4248b10b196178642 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -31,7 +31,7 @@ repositories {
@@ -30,13 +30,13 @@ index d28ed33187f146bbaad6ebd4247cd798d84b3173..08a12fa2efd5df89bdbb31d4248b10b1
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
 -            "Implementation-Version" to "git-Paper-$implementationVersion",
--            "Implementation-Version" to "git-Airplane-$implementationVersion", // Airplane // Tuinity
+-            "Implementation-Version" to "git-Airplane-$implementationVersion", // Airplane
 +            "Implementation-Version" to "git-Purpur-$implementationVersion", // Airplane // Purpur
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index 8642f3eaa4035243afd629b78ddb8cd2430323dd..aecffe698db5678b5ac58b9255b2438a5d51021e 100644
+index ece77f5ea4b14bbed7c070131b3251ea86764538..7dd9ae996430e709fdffbb88a9e77e5d682d7f8f 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -20,6 +20,7 @@ import java.util.stream.StreamSupport;
@@ -47,17 +47,6 @@ index 8642f3eaa4035243afd629b78ddb8cd2430323dd..aecffe698db5678b5ac58b9255b2438a
      private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads";
      private static @Nullable String mcVer;
  
-@@ -31,8 +32,8 @@ public class PaperVersionFetcher implements VersionFetcher {
-     @Nonnull
-     @Override
-     public Component getVersionMessage(@Nonnull String serverVersion) {
--        String[] parts = serverVersion.substring("git-Airplane-".length()).split("[-\\s]"); // Tuinity
--        final Component updateMessage = getUpdateStatusMessage("TECHNOVE/Airplane", GITHUB_BRANCH_NAME, parts[0]); // Tuinity
-+        String[] parts = serverVersion.substring("git-Purpur-".length()).split("[-\\s]"); // Airplane // Purpur
-+        final Component updateMessage = getUpdateStatusMessage("pl3xgaming/Purpur", "ver/" + getMinecraftVersion(), parts[0]); // Airplane // Purpur
-         final Component history = getHistory();
- 
-         return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
 @@ -45,7 +46,7 @@ public class PaperVersionFetcher implements VersionFetcher {
                  String result = matcher.group();
                  mcVer = result.substring(0, result.length() - 2); // strip 'R' anchor and trailing '-'
@@ -67,31 +56,7 @@ index 8642f3eaa4035243afd629b78ddb8cd2430323dd..aecffe698db5678b5ac58b9255b2438a
                  org.bukkit.Bukkit.getLogger().warning("Pattern: " + VER_PATTERN.toString());
                  org.bukkit.Bukkit.getLogger().warning("Version: " + org.bukkit.Bukkit.getBukkitVersion());
              }
-@@ -56,13 +57,18 @@ public class PaperVersionFetcher implements VersionFetcher {
- 
-     private static Component getUpdateStatusMessage(@Nonnull String repo, @Nonnull String branch, @Nonnull String versionInfo) {
-         int distance;
--        //try {
--        //    int jenkinsBuild = Integer.parseInt(versionInfo);
--        //    distance = fetchDistanceFromSiteApi(jenkinsBuild, getMinecraftVersion());
--        //} catch (NumberFormatException ignored) {
-+        // Purpur start - put all this back, yet again
-+        try {
-+            int buildNumber = Integer.parseInt(versionInfo);
-+            distance = fetchDistanceFromSiteApi(buildNumber, getMinecraftVersion());
-+            if (distance < 0) {
-+                distance = fetchDistanceFromJenkins(buildNumber);
-+            }
-+        } catch (NumberFormatException ignored) {
-             versionInfo = versionInfo.replace("\"", "");
-             distance = fetchDistanceFromGitHub(repo, branch, versionInfo);
--        //}
-+        }
-+        // Purpur end
- 
-         switch (distance) {
-             case -1:
-@@ -85,15 +91,11 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -85,15 +86,11 @@ public class PaperVersionFetcher implements VersionFetcher {
          if (siteApiVersion == null) { return -1; }
          try {
              try (BufferedReader reader = Resources.asCharSource(
@@ -109,7 +74,7 @@ index 8642f3eaa4035243afd629b78ddb8cd2430323dd..aecffe698db5678b5ac58b9255b2438a
                  return latest - jenkinsBuild;
              } catch (JsonSyntaxException ex) {
                  ex.printStackTrace();
-@@ -105,6 +107,22 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -105,6 +102,22 @@ public class PaperVersionFetcher implements VersionFetcher {
          }
      }
  
