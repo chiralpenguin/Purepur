@@ -5,7 +5,7 @@ Subject: [PATCH] Lagging threshold
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index eef19d6ccdb9e0a88c41474092d9d1c14e8cf927..1dafe76f1057c090b05fa582508a03f7ef35b6cb 100644
+index e172e80cd0ba862f2a532d0935c0dd369924f9fd..422c4e547d2c1fb4f711aa6952f4434ddd96e86e 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -306,6 +306,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -16,7 +16,7 @@ index eef19d6ccdb9e0a88c41474092d9d1c14e8cf927..1dafe76f1057c090b05fa582508a03f7
      public final SlackActivityAccountant slackActivityAccountant = new SlackActivityAccountant();
      // Spigot end
      public static long currentTickLong = 0L; // Paper
-@@ -1257,6 +1258,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1265,6 +1266,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                          this.recentTps[1] = tps5.getAverage();
                          this.recentTps[2] = tps15.getAverage();
                          // Paper end
@@ -25,23 +25,21 @@ index eef19d6ccdb9e0a88c41474092d9d1c14e8cf927..1dafe76f1057c090b05fa582508a03f7
                      }
                      // Spigot end
 diff --git a/src/main/java/net/pl3x/purpur/PurpurConfig.java b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-index 288bd64f4885f23be1aab07ac216a59c0560fc63..04223a120f25496a2cd3a0570956ac1e29325834 100644
+index e246c1938c8a0f730fec595169d6434f65202caa..52874b2e853ff3f2681c5986e7b2441b9dd4441c 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurConfig.java
 +++ b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-@@ -170,6 +170,11 @@ public class PurpurConfig {
+@@ -174,4 +174,9 @@ public class PurpurConfig {
+         }
          if (!co.aikar.timings.TimingsManager.hiddenConfigs.contains("server-ip")) co.aikar.timings.TimingsManager.hiddenConfigs.add("server-ip");
      }
- 
++
 +    public static double laggingThreshold = 19.0D;
 +    private static void tickLoopSettings() {
 +        laggingThreshold = getDouble("settings.lagging-threshold", laggingThreshold);
 +    }
-+
-     public static String serverModName = "Purpur";
-     private static void serverModName() {
-         serverModName = getString("settings.server-mod-name", serverModName);
+ }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 6f0e1ae2c42133fb8041921e844d8ee501899088..4dd23f5971c1e268e26bb7eeed9c592f8971c7e3 100644
+index 2c52a8d73c14213bc6357944b117324b567eb33f..f222143ab5ca659b65cd93560e32ea78866a8d9a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -2746,5 +2746,10 @@ public final class CraftServer implements Server {

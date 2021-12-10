@@ -5,7 +5,7 @@ Subject: [PATCH] Fix the dead lagging the server
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index d35cdcf2ee7568ad5caf52588db54e9c6f607d4b..3b3cb65d56b0d0de13ae165ebdc138e24b954cc2 100644
+index 2cad495e834300cdd3ee65cdf43d28ae602c9625..4bbc5808114932b32259c67a14896e76e411e759 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
 @@ -1772,6 +1772,7 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource, n
@@ -17,10 +17,10 @@ index d35cdcf2ee7568ad5caf52588db54e9c6f607d4b..3b3cb65d56b0d0de13ae165ebdc138e2
  
      public void absMoveTo(double x, double y, double z) {
 diff --git a/src/main/java/net/minecraft/world/entity/LivingEntity.java b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-index 5905f02cb695ca619ebcd13cad2fc6dff564f5d9..79968e5554970ee8da58b15c6eeee153781819a1 100644
+index df12ba04df24e1c70c43e00283ea2a78ae2ca422..fa46c281d02178a1acff517a72e0c76134e82eea 100644
 --- a/src/main/java/net/minecraft/world/entity/LivingEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/LivingEntity.java
-@@ -2891,7 +2891,7 @@ public abstract class LivingEntity extends Entity {
+@@ -2903,7 +2903,7 @@ public abstract class LivingEntity extends Entity {
              }
          }
  

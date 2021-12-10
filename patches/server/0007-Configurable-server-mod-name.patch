@@ -5,29 +5,31 @@ Subject: [PATCH] Configurable server mod name
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 2c01626bd609441babf95156b8397bc51267ec80..f2470bb5afe2774de3410410bc35c8c492caa3e2 100644
+index 9270382842146853ab99ef9b8973636fd72e9281..e172e80cd0ba862f2a532d0935c0dd369924f9fd 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1721,7 +1721,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1729,7 +1729,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
--        return "Purepur"; // Purpur - Purpur > // Airplane - Airplane > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return net.pl3x.purpur.PurpurConfig.serverModName; // Purpur - Purpur > // Airplane - Airplane > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+-        return "Purpur"; // Purpur - Purpur > // Airplane // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return net.pl3x.purpur.PurpurConfig.serverModName; // Purpur - Purpur > // Airplane // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/net/pl3x/purpur/PurpurConfig.java b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-index 583583bf6fbab700d0662249bfc39dda70acd94f..288bd64f4885f23be1aab07ac216a59c0560fc63 100644
+index 3dd8006ea677affc2c98573eff26aa611e1cd565..e246c1938c8a0f730fec595169d6434f65202caa 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurConfig.java
 +++ b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-@@ -169,4 +169,9 @@ public class PurpurConfig {
-         }
-         if (!co.aikar.timings.TimingsManager.hiddenConfigs.contains("server-ip")) co.aikar.timings.TimingsManager.hiddenConfigs.add("server-ip");
+@@ -157,6 +157,11 @@ public class PurpurConfig {
+         return builder.build();
      }
-+
+ 
 +    public static String serverModName = "Purpur";
 +    private static void serverModName() {
 +        serverModName = getString("settings.server-mod-name", serverModName);
 +    }
- }
++
+     private static void timingsSettings() {
+         if (version < 18) {
+             String oldVal = getString("settings.timings.url", "https://timings.pl3x.net");

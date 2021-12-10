@@ -489,7 +489,7 @@ index 3afd5f5c0208a4ee93b5dbfc2aab2b9d2e8a7544..7838731e0e16bdccfb79e74ceb64148f
  
      /**
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index f1b351610185332e9c1e32d4cb7182783d33cc0b..ed67b960689d7b1a686f64f5c77393be56a17ef4 100644
+index c6b478fe41dcd6017571c68f3114442f3c9f6415..cc82fdb614110d32b8efb1d3d8a337776dfbf0fd 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
 @@ -1688,6 +1688,9 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
@@ -503,7 +503,7 @@ index f1b351610185332e9c1e32d4cb7182783d33cc0b..ed67b960689d7b1a686f64f5c77393be
  
          @NotNull
 diff --git a/src/main/java/org/bukkit/UnsafeValues.java b/src/main/java/org/bukkit/UnsafeValues.java
-index 379acee1b5f2d06e6a96f3444783f4a29ca24095..ef3011d74ce9acf02d0ee857033816854134ec0e 100644
+index 014c9984018ad5e51a26228a137e1ba4eb3e80c8..a39c0da1663f53b828bb35e662dd81df63b9d045 100644
 --- a/src/main/java/org/bukkit/UnsafeValues.java
 +++ b/src/main/java/org/bukkit/UnsafeValues.java
 @@ -87,6 +87,8 @@ public interface UnsafeValues {
@@ -515,7 +515,7 @@ index 379acee1b5f2d06e6a96f3444783f4a29ca24095..ef3011d74ce9acf02d0ee85703381685
       */
      default com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
          return new com.destroystokyo.paper.util.VersionFetcher.DummyVersionFetcher();
-@@ -105,6 +107,8 @@ public interface UnsafeValues {
+@@ -113,6 +115,8 @@ public interface UnsafeValues {
      /**
       * Return the translation key for the Material, so the client can translate it into the active
       * locale when using a {@link net.kyori.adventure.text.TranslatableComponent}.
@@ -524,7 +524,7 @@ index 379acee1b5f2d06e6a96f3444783f4a29ca24095..ef3011d74ce9acf02d0ee85703381685
       * @return the translation key
       */
      String getTranslationKey(Material mat);
-@@ -112,6 +116,8 @@ public interface UnsafeValues {
+@@ -120,6 +124,8 @@ public interface UnsafeValues {
      /**
       * Return the translation key for the Block, so the client can translate it into the active
       * locale when using a {@link net.kyori.adventure.text.TranslatableComponent}.
@@ -533,7 +533,7 @@ index 379acee1b5f2d06e6a96f3444783f4a29ca24095..ef3011d74ce9acf02d0ee85703381685
       * @return the translation key
       */
      String getTranslationKey(org.bukkit.block.Block block);
-@@ -120,6 +126,8 @@ public interface UnsafeValues {
+@@ -128,6 +134,8 @@ public interface UnsafeValues {
       * Return the translation key for the EntityType, so the client can translate it into the active
       * locale when using a {@link net.kyori.adventure.text.TranslatableComponent}.<br>
       * This is <code>null</code>, when the EntityType isn't known to NMS (custom entities)
@@ -542,7 +542,7 @@ index 379acee1b5f2d06e6a96f3444783f4a29ca24095..ef3011d74ce9acf02d0ee85703381685
       * @return the translation key
       */
      String getTranslationKey(org.bukkit.entity.EntityType type);
-@@ -135,6 +143,8 @@ public interface UnsafeValues {
+@@ -143,6 +151,8 @@ public interface UnsafeValues {
       * Creates and returns the next EntityId available.
       * <p>
       * Use this when sending custom packets, so that there are no collisions on the client or server.
@@ -587,14 +587,8 @@ index 14986911b4d0099ea2c91ab2196a771b7dee4c50..d1eed20ea3b27f0800a08b42b62aac40
       */
      @NotNull
      public static WorldCreator ofKey(@NotNull NamespacedKey worldKey) {
-diff --git a/src/main/java/org/bukkit/advancement/AdvancementDisplay.java b/src/main/java/org/bukkit/advancement/AdvancementDisplay.java
-new file mode 100644
-index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
-diff --git a/src/main/java/org/bukkit/advancement/FrameType.java b/src/main/java/org/bukkit/advancement/FrameType.java
-new file mode 100644
-index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
 diff --git a/src/main/java/org/bukkit/block/Block.java b/src/main/java/org/bukkit/block/Block.java
-index 0006a5a53dfa9fc81c608423e8740a9c820659a3..1eac84f8abf71029e9e0626a9fa93446f9d0df02 100644
+index 70caaf05be813ba390412714ba0a39981edc2475..c4729769893fd3243ad60f4ad1bb3d7563ff775f 100644
 --- a/src/main/java/org/bukkit/block/Block.java
 +++ b/src/main/java/org/bukkit/block/Block.java
 @@ -184,6 +184,9 @@ public interface Block extends Metadatable, net.kyori.adventure.translation.Tran
@@ -793,7 +787,7 @@ index 9e7f42caab1204036f4203354c115fd40c6def92..f76ddd80f9fc926f73b1cc50f0a2767a
  
      /**
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
-index b02704b0535522c5535b560105eec2885fdd3e77..1260210f74d300e9d7b751f69736a5ad3613e100 100644
+index bafad5764cc3933fcd9602d37bd2e68424cbd575..110b07efe6b5d4bed9eb231dd35cc83d2c8d4e02 100644
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
 @@ -668,6 +668,9 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
@@ -856,9 +850,9 @@ index b02704b0535522c5535b560105eec2885fdd3e77..1260210f74d300e9d7b751f69736a5ad
 +     * @return True if entity is ticking
       */
      public boolean isTicking();
-     // Paper end
+ 
 diff --git a/src/main/java/org/bukkit/entity/EntityType.java b/src/main/java/org/bukkit/entity/EntityType.java
-index d36d314383713bac3b11f18d95b0809dce3cd6e0..6a340d660d75968a52005502e6b410e2408140af 100644
+index 48aa290dbcf93715ce58d56d6cf3216948f2f3f2..cf5e2f8cfe425172f5c194689e2d923b109c6929 100644
 --- a/src/main/java/org/bukkit/entity/EntityType.java
 +++ b/src/main/java/org/bukkit/entity/EntityType.java
 @@ -20,6 +20,9 @@ import org.jetbrains.annotations.Contract;
@@ -899,7 +893,7 @@ index 812af884d0601645e254ac29613323d2fd92a112..c1b1ac9210eaaa02dad0449aac867efb
  
      /**
 diff --git a/src/main/java/org/bukkit/entity/LightningStrike.java b/src/main/java/org/bukkit/entity/LightningStrike.java
-index 2c81a3f685588431a3c7675c84b35a28975232af..efb308c82580722e5106d5d1c7512d99c38e536a 100644
+index 6f5b6901032eb03606c4566b24459a03baac0c73..9dc1f27d3b36e112d2e79d93b3e49c3999c1bd97 100644
 --- a/src/main/java/org/bukkit/entity/LightningStrike.java
 +++ b/src/main/java/org/bukkit/entity/LightningStrike.java
 @@ -15,6 +15,9 @@ public interface LightningStrike extends Entity {
@@ -927,10 +921,10 @@ index a6a7429ed2e1eefb2b12b7480ed74fcc3963a864..e8027e1d505dda6effbb1698550016e8
  
          NORMAL(false),
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index 3e8cd3971ac8256a40d9b85cd7514998c965512c..34008a4263d68c99e879d5961d6cc44ce406080b 100644
+index 9a6e410206852029f1fea0c4409352d5743dcf64..5a865355e341f268ca941898f133bb2cb46c3d8b 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -2117,6 +2117,8 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -2121,6 +2121,8 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      void resetCooldown();
  
      /**
@@ -939,7 +933,7 @@ index 3e8cd3971ac8256a40d9b85cd7514998c965512c..34008a4263d68c99e879d5961d6cc44c
       * @return the client option value of the player
       */
      @NotNull
-@@ -2156,6 +2158,9 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -2152,6 +2154,9 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
      // Paper end
  
      // Spigot start
@@ -1334,7 +1328,7 @@ index c7b17eabf07b829a02afe7c1f27a5127b6bfea70..d4e2bcf8ce8fc2af851b471490147f00
  
      /**
 diff --git a/src/main/java/org/bukkit/inventory/ItemFactory.java b/src/main/java/org/bukkit/inventory/ItemFactory.java
-index 0a4466c6ca519c3a5da76ff870fb2a4e3a06effd..bba122c1ca4253aa5a298764fc743296e03d291d 100644
+index 8677e273641a46aae7107361f23f6ded59a50dc0..fc6bbe662b1da5ca7f4e98c6cc4457bf00529fd4 100644
 --- a/src/main/java/org/bukkit/inventory/ItemFactory.java
 +++ b/src/main/java/org/bukkit/inventory/ItemFactory.java
 @@ -148,6 +148,7 @@ public interface ItemFactory {

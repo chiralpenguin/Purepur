@@ -29,22 +29,6 @@ index f5d01bce4d5547b4aeca96b7962b2090f47ea541..05f1b6d103ec20f196b60944f5bc0073
  
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
-diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 675d1d36ece42c1afafb497eae677e8f2546dfc2..a40bdc726fba1640a0d5e6950e964852c4206313 100644
---- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
-+++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-@@ -118,6 +118,11 @@ public class PaperConfig {
-             }
-         }
- 
-+        // Purpur start - public save method for config migration
-+        saveConfig();
-+    }
-+    public static void saveConfig() {
-+        // Purpur end
-         try {
-             config.save(CONFIG_FILE);
-         } catch (IOException ex) {
 diff --git a/src/main/java/net/minecraft/commands/CommandSourceStack.java b/src/main/java/net/minecraft/commands/CommandSourceStack.java
 index 71e29d29ed5c2d61832e2f124967bb223708406f..224669ecaad37ac2f16900700eea40ef52d938a5 100644
 --- a/src/main/java/net/minecraft/commands/CommandSourceStack.java
@@ -101,7 +85,7 @@ index 69dae20c0ff581359042899d615ebcdd7140c02a..235e16740ad0419b8ea8793af2f6013f
          io.papermc.paper.util.ObfHelper.INSTANCE.getClass(); // load mappings for stacktrace deobf and etc.
          io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 24d772c18d5a448154909e4a51964ba29485a5c2..061af7fc45564c297958e2f08cd0a2fbd64a5c8e 100644
+index f66894df2902a1f1bba1dd69a3c3ee229fbe13f6..216bd08b4f74b029968acc5e168e1681327629b1 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -168,6 +168,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -123,7 +107,7 @@ index 24d772c18d5a448154909e4a51964ba29485a5c2..061af7fc45564c297958e2f08cd0a2fb
          this.ticksPerAnimalSpawns = this.getCraftServer().getTicksPerAnimalSpawns(); // CraftBukkit
 diff --git a/src/main/java/net/pl3x/purpur/PurpurConfig.java b/src/main/java/net/pl3x/purpur/PurpurConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..50dd18f72d7ec674a33049ad2e228f7d8a4054a5
+index 0000000000000000000000000000000000000000..f589e4376f88c7774a7fe999cad4d11a59379cd9
 --- /dev/null
 +++ b/src/main/java/net/pl3x/purpur/PurpurConfig.java
 @@ -0,0 +1,159 @@
@@ -190,8 +174,8 @@ index 0000000000000000000000000000000000000000..50dd18f72d7ec674a33049ad2e228f7d
 +        commands = new HashMap<>();
 +        commands.put("purpur", new PurpurCommand("purpur"));
 +
-+        version = getInt("config-version", 20);
-+        set("config-version", 20);
++        version = getInt("config-version", 22);
++        set("config-version", 22);
 +
 +        readConfig(PurpurConfig.class, null);
 +    }
@@ -288,10 +272,10 @@ index 0000000000000000000000000000000000000000..50dd18f72d7ec674a33049ad2e228f7d
 +}
 diff --git a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..683ee20f08eac69238bea33021e35b1838c44a8b
+index 0000000000000000000000000000000000000000..8bc89d48695c816a1db77f9cdffd05f35afea92a
 --- /dev/null
 +++ b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-@@ -0,0 +1,95 @@
+@@ -0,0 +1,96 @@
 +package net.pl3x.purpur;
 +
 +import net.minecraft.core.Registry;
@@ -310,6 +294,7 @@ index 0000000000000000000000000000000000000000..683ee20f08eac69238bea33021e35b18
 +import net.pl3x.purpur.tool.Waxable;
 +import net.pl3x.purpur.tool.Weatherable;
 +import org.apache.commons.lang.BooleanUtils;
++import org.bukkit.ChatColor;
 +import org.bukkit.World;
 +import org.bukkit.configuration.ConfigurationSection;
 +
@@ -459,7 +444,7 @@ index 0000000000000000000000000000000000000000..6e7f56fe2b78d7a09d5d130f2c88338f
 +    }
 +}
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index f8bdba7d03d93d309b687261a33bcc76287a184b..a98661c72a1b2b5ef2ff17be6639559e113176dd 100644
+index 20111504d88cd10ce68a6b9bfffe5d976b0feb33..665314f2707a6b12a5c2d932681844e6928cd233 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -924,6 +924,7 @@ public final class CraftServer implements Server {

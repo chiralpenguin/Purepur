@@ -1,20 +1,22 @@
+import io.papermc.paperweight.util.constants.*
+
 plugins {
     java
-    id("com.github.johnrengelman.shadow") version "7.0.0" apply false
-    id("io.papermc.paperweight.patcher") version "1.1.12"
+    `maven-publish`
+    id("com.github.johnrengelman.shadow") version "7.1.0" apply false
+    id("io.papermc.paperweight.patcher") version "1.2.0"
 }
 
 repositories {
     mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public/") {
-        content {
-            onlyForConfigurations("paperclip")
-        }
+        content { onlyForConfigurations(PAPERCLIP_CONFIG) }
     }
 }
 
 dependencies {
     remapper("net.fabricmc:tiny-remapper:0.6.0:fat")
+    decompiler("net.minecraftforge:forgeflower:1.5.498.12")
     paperclip("io.papermc:paperclip:2.0.1")
 }
 
@@ -55,18 +57,18 @@ subprojects {
 }
 
 paperweight {
-    serverProject.set(project(":Purepur-Server"))
+    serverProject.set(project(":Purpur-Server"))
+
+    remapRepo.set("https://maven.fabricmc.net/")
+    decompileRepo.set("https://files.minecraftforge.net/maven/")
 
     usePaperUpstream(providers.gradleProperty("paperCommit")) {
         withPaperPatcher {
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
-            apiOutputDir.set(layout.projectDirectory.dir("Purepur-API"))
-
-            remapRepo.set("https://maven.fabricmc.net/")
-            decompileRepo.set("https://files.minecraftforge.net/maven/")
+            apiOutputDir.set(layout.projectDirectory.dir("Purpur-API"))
 
             serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
-            serverOutputDir.set(layout.projectDirectory.dir("Purepur-Server"))
+            serverOutputDir.set(layout.projectDirectory.dir("Purpur-Server"))
         }
     }
 }

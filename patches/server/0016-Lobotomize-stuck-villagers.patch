@@ -5,7 +5,7 @@ Subject: [PATCH] Lobotomize stuck villagers
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
-index 0cda92a324674f18fc977d179e4dfb32e7fc671e..961aa71340d900ff73ffa85992f8f7779bb90c2b 100644
+index 5d6f7e84991cc94c4c24519a825c9902f256465c..c2e72221284310a9408afb53a0b6478d6d3ac5ac 100644
 --- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
 +++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
 @@ -142,6 +142,7 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
@@ -58,15 +58,16 @@ index 0cda92a324674f18fc977d179e4dfb32e7fc671e..961aa71340d900ff73ffa85992f8f777
          if (this.assignProfessionWhenSpawned) {
              this.assignProfessionWhenSpawned = false;
 diff --git a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-index 10532d26d61b03d03a9a748fb939e9f582de9cd4..8f9bf598b5de00e9bc54d6e7ee4594ec16dd2070 100644
+index a0237fbe203d0b0690a29f0dcf8fc00e6256afca..49cad8f2c1e15a92dad4dc50e7c7743c490e8e69 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
 +++ b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-@@ -129,9 +129,13 @@ public class PurpurWorldConfig {
+@@ -129,10 +129,14 @@ public class PurpurWorldConfig {
+     }
  
      public int villagerBrainTicks = 1;
-     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
 +    public boolean villagerLobotomizeEnabled = false;
 +    public int villagerLobotomizeCheck = 60;
+     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
      private void villagerSettings() {
          villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
          villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);

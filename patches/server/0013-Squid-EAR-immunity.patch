@@ -5,10 +5,10 @@ Subject: [PATCH] Squid EAR immunity
 
 
 diff --git a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-index d5cce2365ed38c734947f05a93777e4096402bbf..c5f2df2d600a5879c6407409df87ecfa578b4ca4 100644
+index 2912fd94d17c837f33d29d7745a47f106d6f1ff0..0f83284817075a4ce1e326f1cefccffd00e2d022 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
 +++ b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-@@ -93,6 +93,11 @@ public class PurpurWorldConfig {
+@@ -94,6 +94,11 @@ public class PurpurWorldConfig {
          return value.isEmpty() ? fallback : value;
      }
  
@@ -21,7 +21,7 @@ index d5cce2365ed38c734947f05a93777e4096402bbf..c5f2df2d600a5879c6407409df87ecfa
      public boolean villagerUseBrainTicksOnlyWhenLagging = true;
      private void villagerSettings() {
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index 79c9f8e81f6592e6d922f6fdfe088a4dd54d44f8..0ed99e0c4cac1e42e861f266938f3f984c116f75 100644
+index 3cc2cf10efbe05cf91876f760c786ab4d2217858..ebb6abc6385ea81199d2ae84d010c244d419147d 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -14,6 +14,7 @@ import net.minecraft.world.entity.ambient.AmbientCreature;

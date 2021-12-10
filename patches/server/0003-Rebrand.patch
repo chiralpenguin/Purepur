@@ -5,27 +5,28 @@ Subject: [PATCH] Rebrand
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 0bd09bd56968660437a94ec078a13ee78339fa0e..e169a112391386a0fae1f47ea17a288bfabe3d41 100644
+index a768d483d9bd90b8a6116c3890e2f5cde2363e49..e34ba0b029cada654c64ee560314cfb17dc95581 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -25,7 +25,7 @@ repositories {
+@@ -22,7 +22,7 @@ repositories {
  }
  
  dependencies {
 -    implementation(project(":Airplane-API")) // Airplane // Paper
-+    implementation(project(":Purepur-API")) // Airplane // Purpur
++    implementation(project(":Purpur-API")) // Airplane // Purpur
      implementation("io.papermc.paper:paper-mojangapi:1.17.1-R0.1-SNAPSHOT") // Airplane
      // Paper start
-     implementation("org.jline:jline-terminal-jansi:3.12.1")
-@@ -57,6 +57,7 @@ dependencies {
+     implementation("org.jline:jline-terminal-jansi:3.21.0")
+@@ -54,6 +54,8 @@ dependencies {
+     runtimeOnly("org.apache.maven.resolver:maven-resolver-transport-http:1.7.0")
  
-     implementation("co.aikar:cleaner:1.0-SNAPSHOT") // Paper
      implementation("io.netty:netty-all:4.1.65.Final") // Paper
 +    implementation("cat.inspiracio:rhino-js-engine:1.7.7.1") // Purpur
++    implementation("dev.omega24:upnp4j:1.0") // Purpur
  
-     implementation("org.quiltmc:tiny-mappings-parser:0.3.0") // Paper - needed to read mappings for stacktrace deobfuscation
+     implementation("net.fabricmc:mapping-io:0.3.0") // Paper - needed to read mappings for stacktrace deobfuscation
      implementation("com.velocitypowered:velocity-native:1.1.0-SNAPSHOT") // Paper
-@@ -85,8 +86,7 @@ tasks.jar {
+@@ -82,8 +84,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
@@ -35,19 +36,42 @@ index 0bd09bd56968660437a94ec078a13ee78339fa0e..e169a112391386a0fae1f47ea17a288b
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
+@@ -226,7 +227,7 @@ tasks.test {
+ fun TaskContainer.registerRunTask(
+     name: String, block: JavaExec.() -> Unit
+ ): TaskProvider<JavaExec> = register<JavaExec>(name) {
+-    group = "paper"
++    group = "paperweight" // Purpur
+     standardInput = System.`in`
+     workingDir = rootProject.layout.projectDirectory.dir(
+         providers.gradleProperty("runWorkDir").forUseAtConfigurationTime().orElse("run")
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index ece77f5ea4b14bbed7c070131b3251ea86764538..7dd9ae996430e709fdffbb88a9e77e5d682d7f8f 100644
+index ece77f5ea4b14bbed7c070131b3251ea86764538..aadd6550a5892e403f7b0bbef008461c1566a1bb 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-@@ -20,6 +20,7 @@ import java.util.stream.StreamSupport;
+@@ -19,8 +19,8 @@ import java.util.stream.StreamSupport;
+ 
  public class PaperVersionFetcher implements VersionFetcher {
      private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
-     private static final String GITHUB_BRANCH_NAME = "master";
+-    private static final String GITHUB_BRANCH_NAME = "master";
+-    private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads";
++    private static final String DOWNLOAD_PAGE = "https://purpur.pl3x.net/downloads/";
 +    private static final String JENKINS_URL = "https://ci.pl3x.net/job/Purpur/lastSuccessfulBuild/buildNumber"; // Purpur
-     private static final String DOWNLOAD_PAGE = "https://papermc.io/downloads";
      private static @Nullable String mcVer;
  
-@@ -45,7 +46,7 @@ public class PaperVersionFetcher implements VersionFetcher {
+     @Override
+@@ -31,8 +31,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+     @Nonnull
+     @Override
+     public Component getVersionMessage(@Nonnull String serverVersion) {
+-        String[] parts = serverVersion.substring("git-Paper-".length()).split("[-\\s]");
+-        final Component updateMessage = getUpdateStatusMessage("PaperMC/Paper", GITHUB_BRANCH_NAME, parts[0]);
++        String[] parts = serverVersion.substring("git-Purpur-".length()).split("[-\\s]"); // Airplane // Purpur
++        final Component updateMessage = getUpdateStatusMessage("pl3xgaming/Purpur", "ver/" + getMinecraftVersion(), parts[0]); // Airplane // Purpur
+         final Component history = getHistory();
+ 
+         return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
+@@ -45,7 +45,7 @@ public class PaperVersionFetcher implements VersionFetcher {
                  String result = matcher.group();
                  mcVer = result.substring(0, result.length() - 2); // strip 'R' anchor and trailing '-'
              } else {
@@ -56,7 +80,7 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..7dd9ae996430e709fdffbb88a9e77e5d
                  org.bukkit.Bukkit.getLogger().warning("Pattern: " + VER_PATTERN.toString());
                  org.bukkit.Bukkit.getLogger().warning("Version: " + org.bukkit.Bukkit.getBukkitVersion());
              }
-@@ -85,15 +86,11 @@ public class PaperVersionFetcher implements VersionFetcher {
+@@ -85,15 +85,11 @@ public class PaperVersionFetcher implements VersionFetcher {
          if (siteApiVersion == null) { return -1; }
          try {
              try (BufferedReader reader = Resources.asCharSource(
@@ -74,29 +98,6 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..7dd9ae996430e709fdffbb88a9e77e5d
                  return latest - jenkinsBuild;
              } catch (JsonSyntaxException ex) {
                  ex.printStackTrace();
-@@ -105,6 +102,22 @@ public class PaperVersionFetcher implements VersionFetcher {
-         }
-     }
- 
-+    // Purpur start
-+    private static int fetchDistanceFromJenkins(int jenkinsBuild) {
-+        try {
-+            try (BufferedReader reader = Resources.asCharSource(new URL(JENKINS_URL), Charsets.UTF_8).openBufferedStream()) {
-+                return Integer.decode(reader.readLine()) - jenkinsBuild;
-+            } catch (NumberFormatException ex) {
-+                ex.printStackTrace();
-+                return -2;
-+            }
-+        } catch (IOException e) {
-+            e.printStackTrace();
-+            return -1;
-+        }
-+    }
-+    // Purpur end
-+
-     // Contributed by Techcable <Techcable@outlook.com> in GH-65
-     private static int fetchDistanceFromGitHub(@Nonnull String repo, @Nonnull String branch, @Nonnull String hash) {
-         try {
 diff --git a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
 index e0b1f0671d16ddddcb6725acd25a1d1d69e42701..8c3c68465197fafc14849dc38a572e309931e2a2 100644
 --- a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
@@ -111,15 +112,15 @@ index e0b1f0671d16ddddcb6725acd25a1d1d69e42701..8c3c68465197fafc14849dc38a572e30
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index c80a600b72972c2e8b7d472e2e11c312adaa06e1..a8405ab03f07d97b8c283b2534aafccf2fa16d06 100644
+index 7120a77ec93009faf1f18fd6c9bc020de66a5f73..9270382842146853ab99ef9b8973636fd72e9281 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1721,7 +1721,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1729,7 +1729,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
 -        return "Airplane"; // Airplane // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "Purepur"; // Purpur - Purpur > // Airplane - Airplane > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "Purpur"; // Purpur - Purpur > // Airplane // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
@@ -143,7 +144,7 @@ index e2901132b78126c0a4eb04363dfe6a0dccd1313f..69dae20c0ff581359042899d615ebcdd
              // Spigot end
              DedicatedServer.LOGGER.warn("To change this, set \"online-mode\" to \"true\" in the server.properties file.");
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index ae2c4388eddef529fba5d5eae354ee15c6e36c9d..f8bdba7d03d93d309b687261a33bcc76287a184b 100644
+index c3a256d0ccb9fb44a5a1f9ffa2d48542ef4e857b..20111504d88cd10ce68a6b9bfffe5d976b0feb33 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -251,7 +251,7 @@ import javax.annotation.Nullable; // Paper
@@ -155,8 +156,21 @@ index ae2c4388eddef529fba5d5eae354ee15c6e36c9d..f8bdba7d03d93d309b687261a33bcc76
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+index d68872771c5d29afc19bf7cd74e970c714267b87..82c6414a26aba6abf10b7c60925bf1ea29e441d1 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
+@@ -394,7 +394,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+ 
+     @Override
+     public com.destroystokyo.paper.util.VersionFetcher getVersionFetcher() {
+-        return new gg.airplane.AirplaneVersionFetcher(); // Airplane
++        return new com.destroystokyo.paper.PaperVersionFetcher(); // Airplane // Purpur
+     }
+ 
+     @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index 1788d79ea489e446d3d9f541693d4ba3dfc26015..5c02ee81aa3e735be039f4d3363a0523163111b3 100644
+index 1788d79ea489e446d3d9f541693d4ba3dfc26015..e7d740e191c5ac408ba1fa493e9367dd52900a02 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
@@ -164,7 +178,7 @@ index 1788d79ea489e446d3d9f541693d4ba3dfc26015..5c02ee81aa3e735be039f4d3363a0523
          String result = "Unknown-Version";
  
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/gg.airplane/airplane-api/pom.properties"); // Tuinity // Airplane
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.purityvanilla.purepur/purepur-api/pom.properties"); // Airplane // Purpur
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/net.pl3x.purpur/purpur-api/pom.properties"); // Airplane // Purpur
          Properties properties = new Properties();
  
          if (stream != null) {

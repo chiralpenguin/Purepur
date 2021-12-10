@@ -6,18 +6,18 @@ Subject: [PATCH] Add option to disable zombie aggressiveness towards villagers
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/entity/ai/VanillaGoal.java b/src/main/java/com/destroystokyo/paper/entity/ai/VanillaGoal.java
-index fb0c77c66ca117eaff9487a41f1e280afe6253c6..1a8780a07281c7b014b6381f402c243f068828a8 100644
+index fb0c77c66ca117eaff9487a41f1e280afe6253c6..ff4776ffb3b85826fbc11af0ad5bb0071cbd603b 100644
 --- a/src/main/java/com/destroystokyo/paper/entity/ai/VanillaGoal.java
 +++ b/src/main/java/com/destroystokyo/paper/entity/ai/VanillaGoal.java
-@@ -195,7 +195,10 @@ public interface VanillaGoal<T extends Mob> extends Goal<T> {
-     GoalKey<Raider> OBTAIN_RAID_LEADER_BANNER = GoalKey.of(Raider.class, NamespacedKey.minecraft("obtain_raid_leader_banner"));
+@@ -196,6 +196,11 @@ public interface VanillaGoal<T extends Mob> extends Goal<T> {
      GoalKey<Raider> RAIDER_CELEBRATION = GoalKey.of(Raider.class, NamespacedKey.minecraft("raider_celebration"));
      GoalKey<Raider> RAIDER_MOVE_THROUGH_VILLAGE = GoalKey.of(Raider.class, NamespacedKey.minecraft("raider_move_through_village"));
--
+ 
 +    // Purpur start
 +    GoalKey<Drowned> DROWNED_ATTACK_VILLAGER = GoalKey.of(Drowned.class, NamespacedKey.minecraft("drowned_attack_villager"));
 +    GoalKey<Zombie> ZOMBIE_ATTACK_VILLAGER = GoalKey.of(Zombie.class, NamespacedKey.minecraft("zombie_attack_villager"));
 +    // Purpur end
++
      /**
       * @deprecated removed in 1.16
       */

@@ -5,5 +5,5 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Purepur"
-include("Purepur-API", "Purepur-Server")
+rootProject.name = "Purpur"
+include("Purpur-API", "Purpur-Server")

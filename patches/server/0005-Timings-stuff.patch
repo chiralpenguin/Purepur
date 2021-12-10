@@ -5,7 +5,7 @@ Subject: [PATCH] Timings stuff
 
 
 diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index da6a5b1b2f5203a0fab8e4fccd727951df7c9c9a..bca3bc0b8687940dff181bab6a5a2a3c11423358 100644
+index 6e8001c7ff6497c9e5c274a5fe85cc204f3ba4c5..c5803537b23d44bad5f447bd2f98d54226d3e80e 100644
 --- a/src/main/java/co/aikar/timings/TimingsExport.java
 +++ b/src/main/java/co/aikar/timings/TimingsExport.java
 @@ -226,10 +226,14 @@ public class TimingsExport extends Thread {
@@ -46,10 +46,10 @@ index da6a5b1b2f5203a0fab8e4fccd727951df7c9c9a..bca3bc0b8687940dff181bab6a5a2a3c
  
          JSONObject object = new JSONObject();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 5cb4635690efd400853ab6378886642dd3bf2983..7029aa4aa8180caa91b1f3141012a5618d4598b3 100644
+index 3ed3f8124ca302b0527788d80fd5a4a87d206534..f5ec3cd3823b363c7213f2c9fc3d85b324fce09d 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-@@ -217,7 +217,7 @@ public class PaperConfig {
+@@ -215,7 +215,7 @@ public class PaperConfig {
          timings = reallyEnableTimings;
          // Airplane end */ // Purpur end
          boolean verboseTimings = getBoolean("timings.verbose", true);
@@ -59,7 +59,7 @@ index 5cb4635690efd400853ab6378886642dd3bf2983..7029aa4aa8180caa91b1f3141012a561
              TimingsManager.url += "/";
          }
 diff --git a/src/main/java/net/pl3x/purpur/PurpurConfig.java b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-index 50dd18f72d7ec674a33049ad2e228f7d8a4054a5..583583bf6fbab700d0662249bfc39dda70acd94f 100644
+index f589e4376f88c7774a7fe999cad4d11a59379cd9..3dd8006ea677affc2c98573eff26aa611e1cd565 100644
 --- a/src/main/java/net/pl3x/purpur/PurpurConfig.java
 +++ b/src/main/java/net/pl3x/purpur/PurpurConfig.java
 @@ -156,4 +156,17 @@ public class PurpurConfig {
