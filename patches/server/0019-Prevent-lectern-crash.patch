@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: chiralpenguin <50334616+chiralpenguin@users.noreply.github.com>
+Date: Mon, 4 Apr 2022 18:36:57 +0100
+Subject: [PATCH] Prevent lectern crash
+
+
+diff --git a/src/main/java/net/minecraft/world/inventory/LecternMenu.java b/src/main/java/net/minecraft/world/inventory/LecternMenu.java
+index ff79925bc6437222f9ceb133e21bbc0600cc74ed..049f660e50334e0d8de838b12148816e64dcd74e 100644
+--- a/src/main/java/net/minecraft/world/inventory/LecternMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/LecternMenu.java
+@@ -120,6 +120,13 @@ public class LecternMenu extends AbstractContainerMenu {
+         }
+     }
+ 
++    // Purepur start
++    @Override
++    public ItemStack quickMoveStack(net.minecraft.world.entity.player.Player player, int index) {
++        return ItemStack.EMPTY;
++    }
++    // Purepur end
++
+     @Override
+     public void setData(int id, int value) {
+         super.setData(id, value);
