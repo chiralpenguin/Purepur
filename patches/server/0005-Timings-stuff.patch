@@ -5,10 +5,10 @@ Subject: [PATCH] Timings stuff
 
 
 diff --git a/src/main/java/co/aikar/timings/TimingsExport.java b/src/main/java/co/aikar/timings/TimingsExport.java
-index 6e8001c7ff6497c9e5c274a5fe85cc204f3ba4c5..c5803537b23d44bad5f447bd2f98d54226d3e80e 100644
+index a5e4467382422df6cff2b9f61f44feabfe7084f3..abbfb819e327186ff2c05d8dbdf00ff2c18dc0ab 100644
 --- a/src/main/java/co/aikar/timings/TimingsExport.java
 +++ b/src/main/java/co/aikar/timings/TimingsExport.java
-@@ -226,10 +226,14 @@ public class TimingsExport extends Thread {
+@@ -236,10 +236,14 @@ public class TimingsExport extends Thread {
          // Information on the users Config
  
          parent.put("config", createObject(
@@ -16,16 +16,17 @@ index 6e8001c7ff6497c9e5c274a5fe85cc204f3ba4c5..c5803537b23d44bad5f447bd2f98d542
 +            // Purpur start
 +            pair("server.properties", mapAsJSON(Bukkit.spigot().getServerProperties())),
              pair("bukkit", mapAsJSON(Bukkit.spigot().getBukkitConfig(), null)),
+-            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)), // Pufferfish
+-            pair("pufferfish", mapAsJSON(gg.pufferfish.pufferfish.PufferfishConfig.getConfigCopy(), null)) // Pufferfish
 +            pair("spigot", mapAsJSON(Bukkit.spigot().getSpigotConfig(), null)),
-             pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)), // Airplane
--            pair("airplane", mapAsJSON(gg.airplane.AirplaneConfig.getConfigCopy(), null)) // Airplane
-+            pair("airplane", mapAsJSON(gg.airplane.AirplaneConfig.getConfigCopy(), null)), // Airplane
++            pair("paper", mapAsJSON(Bukkit.spigot().getPaperConfig(), null)),
++            pair("pufferfish", mapAsJSON(gg.pufferfish.pufferfish.PufferfishConfig.getConfigCopy(), null)), // Pufferfish
 +            pair("purpur", mapAsJSON(Bukkit.spigot().getPurpurConfig(), null))
 +            // Purpur end
          ));
  
          new TimingsExport(listeners, parent, history).start();
-@@ -270,6 +274,19 @@ public class TimingsExport extends Thread {
+@@ -280,6 +284,19 @@ public class TimingsExport extends Thread {
          return timingsCost;
      }
  
@@ -46,37 +47,19 @@ index 6e8001c7ff6497c9e5c274a5fe85cc204f3ba4c5..c5803537b23d44bad5f447bd2f98d542
  
          JSONObject object = new JSONObject();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 3ed3f8124ca302b0527788d80fd5a4a87d206534..f5ec3cd3823b363c7213f2c9fc3d85b324fce09d 100644
+index 5ffc636329029ae070e7a79ab9c822c17c0c5fa6..6c85c29dd73625805bfcb6e1701e98216428eaaf 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-@@ -215,7 +215,7 @@ public class PaperConfig {
-         timings = reallyEnableTimings;
-         // Airplane end */ // Purpur end
+@@ -252,6 +252,12 @@ public class PaperConfig {
+         // Pufferfish end
          boolean verboseTimings = getBoolean("timings.verbose", true);
--        TimingsManager.url = getString("timings.url", "https://timings.aikar.co/");
-+        TimingsManager.url = getString("timings.url", "https://timings.pl3x.net/");
+         TimingsManager.url = getString("timings.url", "https://timings.aikar.co/");
++        // Purpur start
++        if (org.purpurmc.purpur.PurpurConfig.version < 23 && TimingsManager.url.contains("timings.pl3x.net")) {
++            set("timings.url", "https://timings.aikar.co/");
++            TimingsManager.url = "https://timings.aikar.co/";
++        }
++        // Purpur end
          if (!TimingsManager.url.endsWith("/")) {
              TimingsManager.url += "/";
          }
-diff --git a/src/main/java/net/pl3x/purpur/PurpurConfig.java b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-index f589e4376f88c7774a7fe999cad4d11a59379cd9..3dd8006ea677affc2c98573eff26aa611e1cd565 100644
---- a/src/main/java/net/pl3x/purpur/PurpurConfig.java
-+++ b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-@@ -156,4 +156,17 @@ public class PurpurConfig {
-         }
-         return builder.build();
-     }
-+
-+    private static void timingsSettings() {
-+        if (version < 18) {
-+            String oldVal = getString("settings.timings.url", "https://timings.pl3x.net");
-+            com.destroystokyo.paper.PaperConfig.config.set("timings.url", oldVal);
-+            TimingsManager.url = getString("timings.url", oldVal);
-+            if (!TimingsManager.url.endsWith("/")) {
-+                TimingsManager.url += "/";
-+            }
-+            set("settings.timings.url", null);
-+        }
-+        if (!co.aikar.timings.TimingsManager.hiddenConfigs.contains("server-ip")) co.aikar.timings.TimingsManager.hiddenConfigs.add("server-ip");
-+    }
- }

@@ -5,32 +5,31 @@ Subject: [PATCH] Purpur config files
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index f5d01bce4d5547b4aeca96b7962b2090f47ea541..05f1b6d103ec20f196b60944f5bc007384c449f1 100644
+index f2fe6ea3719ff8b2913b7a3a939d7a5b75cb8b28..ed13b7b3f9d2a0b644d17d1019d42cbc4bbe72f7 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
-@@ -593,8 +593,7 @@ public class Metrics {
+@@ -593,7 +593,7 @@ public class Metrics {
              boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
--                Metrics metrics = new Metrics("Airplane", serverUUID, logFailedRequests, Bukkit.getLogger()); // Tuinity - we have our own bstats page // Airplane
--
-+                Metrics metrics = new Metrics("Purpur", serverUUID, logFailedRequests, Bukkit.getLogger()); // Airplane // Purpur
+-                Metrics metrics = new Metrics("Pufferfish", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish
++                Metrics metrics = new Metrics("Purpur", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish // Purpur
+ 
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
                      String minecraftVersion = Bukkit.getVersion();
-                     minecraftVersion = minecraftVersion.substring(minecraftVersion.indexOf("MC: ") + 4, minecraftVersion.length() - 1);
-@@ -602,8 +601,8 @@ public class Metrics {
+@@ -602,8 +602,8 @@ public class Metrics {
                  }));
  
                  metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
 -                metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : "offline"));
--                metrics.addCustomChart(new Metrics.SimplePie("airplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Tuinity - we have our own bstats page // Airplane
+-                metrics.addCustomChart(new Metrics.SimplePie("pufferfish_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown"));
 +                metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : (PaperConfig.isProxyOnlineMode() ? "bungee" : "offline"))); // Purpur
-+                metrics.addCustomChart(new Metrics.SimplePie("purpur_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Airplane // Purpur
++                metrics.addCustomChart(new Metrics.SimplePie("purpur_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Purpur
  
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/net/minecraft/commands/CommandSourceStack.java b/src/main/java/net/minecraft/commands/CommandSourceStack.java
-index 71e29d29ed5c2d61832e2f124967bb223708406f..224669ecaad37ac2f16900700eea40ef52d938a5 100644
+index 00bbf33aa44e2d5a4e755a2d7c1a60de9e36674f..9d884da26e6515a85b0a8f8f611fafc17c19debc 100644
 --- a/src/main/java/net/minecraft/commands/CommandSourceStack.java
 +++ b/src/main/java/net/minecraft/commands/CommandSourceStack.java
 @@ -236,6 +236,30 @@ public class CommandSourceStack implements SharedSuggestionProvider, com.destroy
@@ -46,7 +45,7 @@ index 71e29d29ed5c2d61832e2f124967bb223708406f..224669ecaad37ac2f16900700eea40ef
 +        if (message == null) {
 +            return;
 +        }
-+        sendSuccess(net.kyori.adventure.text.minimessage.MiniMessage.get().parse(message), broadcastToOps);
++        sendSuccess(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(message), broadcastToOps);
 +    }
 +
 +    public void sendSuccess(@Nullable net.kyori.adventure.text.Component message) {
@@ -65,77 +64,154 @@ index 71e29d29ed5c2d61832e2f124967bb223708406f..224669ecaad37ac2f16900700eea40ef
          if (this.source.acceptsSuccess() && !this.silent) {
              this.source.sendMessage(message, Util.NIL_UUID);
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 69dae20c0ff581359042899d615ebcdd7140c02a..235e16740ad0419b8ea8793af2f6013fda24d503 100644
+index db2c73390d846f6428546fe18b961147ac092ba2..a4a07a7cc9a33f01234e461aa3c19e1c2e4d6aef 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-@@ -230,6 +230,15 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+@@ -231,6 +231,15 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
          }
          thread.start(); // Paper - start console thread after MinecraftServer.console & PaperConfig are initialized
          com.destroystokyo.paper.PaperConfig.registerCommands();
 +        // Purpur start
 +        try {
-+            net.pl3x.purpur.PurpurConfig.init((java.io.File) options.valueOf("purpur-settings"));
++            org.purpurmc.purpur.PurpurConfig.init((java.io.File) options.valueOf("purpur-settings"));
 +        } catch (Exception e) {
 +            DedicatedServer.LOGGER.error("Unable to load server configuration", e);
 +            return false;
 +        }
-+        net.pl3x.purpur.PurpurConfig.registerCommands();
++        org.purpurmc.purpur.PurpurConfig.registerCommands();
 +        // Purpur end
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
          io.papermc.paper.util.ObfHelper.INSTANCE.getClass(); // load mappings for stacktrace deobf and etc.
          io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index f66894df2902a1f1bba1dd69a3c3ee229fbe13f6..216bd08b4f74b029968acc5e168e1681327629b1 100644
+index 8026e8ca528071bf80fecb5e96370d1d2ae799db..f16e21045f3a6b8c0446c72825b463ee4dc1c24a 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
-@@ -168,6 +168,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+@@ -164,6 +164,8 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
      public final com.destroystokyo.paper.PaperWorldConfig paperConfig; // Paper
      public final com.destroystokyo.paper.antixray.ChunkPacketBlockController chunkPacketBlockController; // Paper - Anti-Xray
  
-+    public final net.pl3x.purpur.PurpurWorldConfig purpurConfig; // Purpur
++    public final org.purpurmc.purpur.PurpurWorldConfig purpurConfig; // Purpur
 +
      public final co.aikar.timings.WorldTimingsHandler timings; // Paper
      public static BlockPos lastPhysicsProblem; // Spigot
      private org.spigotmc.TickLimiter entityLimiter;
-@@ -325,6 +327,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
-     protected Level(WritableLevelData worlddatamutable, ResourceKey<Level> resourcekey, final DimensionType dimensionmanager, Supplier<ProfilerFiller> supplier, boolean flag, boolean flag1, long i, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider, org.bukkit.World.Environment env, java.util.concurrent.Executor executor) { // Paper - Anti-Xray - Pass executor
+@@ -273,6 +275,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+     protected Level(WritableLevelData worlddatamutable, ResourceKey<Level> resourcekey, Holder<DimensionType> holder, Supplier<ProfilerFiller> supplier, boolean flag, boolean flag1, long i, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider, org.bukkit.World.Environment env, java.util.concurrent.Executor executor) { // Paper - Async-Anti-Xray - Pass executor
          this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName()); // Spigot
          this.paperConfig = new com.destroystokyo.paper.PaperWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName(), this.spigotConfig); // Paper
-+        this.purpurConfig = new net.pl3x.purpur.PurpurWorldConfig((ServerLevel) this, ((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName(), env); // Purpur
++        this.purpurConfig = new org.purpurmc.purpur.PurpurWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName(), env); // Purpur
          this.generator = gen;
          this.world = new CraftWorld((ServerLevel) this, gen, biomeProvider, env);
-         this.ticksPerAnimalSpawns = this.getCraftServer().getTicksPerAnimalSpawns(); // CraftBukkit
-diff --git a/src/main/java/net/pl3x/purpur/PurpurConfig.java b/src/main/java/net/pl3x/purpur/PurpurConfig.java
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index a2af4e9b32f9ebfb97255437a7028df8613d0d95..283856f60d27dcd041b16f313c6119127f4aeea6 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -956,6 +956,7 @@ public final class CraftServer implements Server {
+ 
+         org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
+         com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
++        org.purpurmc.purpur.PurpurConfig.init((File) console.options.valueOf("purpur-settings")); // Purpur
+         for (ServerLevel world : this.console.getAllLevels()) {
+             // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
+             world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
+@@ -972,6 +973,7 @@ public final class CraftServer implements Server {
+             }
+             world.spigotConfig.init(); // Spigot
+             world.paperConfig.init(); // Paper
++            world.purpurConfig.init(); // Purpur
+         }
+ 
+         Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
+@@ -987,6 +989,7 @@ public final class CraftServer implements Server {
+         this.reloadData();
+         org.spigotmc.SpigotConfig.registerCommands(); // Spigot
+         com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper
++        org.purpurmc.purpur.PurpurConfig.registerCommands(); // Purpur
+         this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
+         this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
+ 
+@@ -2706,6 +2709,18 @@ public final class CraftServer implements Server {
+             return com.destroystokyo.paper.PaperConfig.config;
+         }
+ 
++        // Purpur start
++        @Override
++        public YamlConfiguration getPurpurConfig() {
++            return org.purpurmc.purpur.PurpurConfig.config;
++        }
++
++        @Override
++        public java.util.Properties getServerProperties() {
++            return getProperties().properties;
++        }
++        // Purpur end
++
+         @Override
+         public void restart() {
+             org.spigotmc.RestartCommand.restart();
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index fbe68bd4739d9a0e7d9bc4c3d5ba8ecfd2d13954..dd8ab900bb3ff451c7c200f9cb3e3eca3e78a2c6 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -153,6 +153,14 @@ public class Main {
+                         .describedAs("Jar file");
+                 // Paper end
+ 
++                // Purpur Start
++                acceptsAll(asList("purpur", "purpur-settings"), "File for purpur settings")
++                    .withRequiredArg()
++                    .ofType(File.class)
++                    .defaultsTo(new File("purpur.yml"))
++                    .describedAs("Yml file");
++                // Purpur end
++
+                 // Paper start
+                 acceptsAll(asList("server-name"), "Name of the server")
+                         .withRequiredArg()
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurConfig.java b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..f589e4376f88c7774a7fe999cad4d11a59379cd9
+index 0000000000000000000000000000000000000000..b3bfc56859d00f9e27bd1d230dd19b92985b5718
 --- /dev/null
-+++ b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-@@ -0,0 +1,159 @@
-+package net.pl3x.purpur;
++++ b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+@@ -0,0 +1,170 @@
++package org.purpurmc.purpur;
 +
 +import co.aikar.timings.TimingsManager;
 +import com.google.common.base.Throwables;
 +import com.google.common.collect.ImmutableMap;
++import com.mojang.datafixers.util.Pair;
 +import net.kyori.adventure.bossbar.BossBar;
++import net.minecraft.core.Registry;
++import net.minecraft.resources.ResourceLocation;
 +import net.minecraft.server.MinecraftServer;
++import net.minecraft.world.effect.MobEffect;
++import net.minecraft.world.effect.MobEffectInstance;
 +import net.minecraft.world.entity.EntityDimensions;
 +import net.minecraft.world.entity.EntityType;
-+import net.pl3x.purpur.command.PurpurCommand;
-+import net.pl3x.purpur.task.TPSBarTask;
++import net.minecraft.world.food.FoodProperties;
++import net.minecraft.world.food.Foods;
++import net.minecraft.world.item.enchantment.Enchantment;
 +import org.bukkit.Bukkit;
 +import org.bukkit.command.Command;
 +import org.bukkit.configuration.ConfigurationSection;
 +import org.bukkit.configuration.InvalidConfigurationException;
 +import org.bukkit.configuration.file.YamlConfiguration;
++import org.purpurmc.purpur.command.PurpurCommand;
++import org.purpurmc.purpur.task.TPSBarTask;
 +
 +import java.io.File;
 +import java.io.IOException;
 +import java.lang.reflect.InvocationTargetException;
 +import java.lang.reflect.Method;
 +import java.lang.reflect.Modifier;
++import java.util.ArrayList;
 +import java.util.HashMap;
++import java.util.HashSet;
 +import java.util.List;
 +import java.util.Map;
++import java.util.Set;
 +import java.util.logging.Level;
 +
 +@SuppressWarnings("unused")
@@ -147,14 +223,14 @@ index 0000000000000000000000000000000000000000..f589e4376f88c7774a7fe999cad4d11a
 +            + "If you need help with the configuration or have any questions related to Purpur,\n"
 +            + "join us in our Discord guild.\n"
 +            + "\n"
-+            + "Website: https://github.com/pl3xgaming/Purpur \n"
-+            + "Wiki: https://github.com/pl3xgaming/Purpur/wiki \n";
++            + "Website: https://purpurmc.org \n"
++            + "Docs: https://purpurmc.org/docs \n";
 +    private static File CONFIG_FILE;
 +    public static YamlConfiguration config;
 +
 +    private static Map<String, Command> commands;
 +
-+    static int version;
++    public static int version;
 +    static boolean verbose;
 +
 +    public static void init(File configFile) {
@@ -174,8 +250,8 @@ index 0000000000000000000000000000000000000000..f589e4376f88c7774a7fe999cad4d11a
 +        commands = new HashMap<>();
 +        commands.put("purpur", new PurpurCommand("purpur"));
 +
-+        version = getInt("config-version", 22);
-+        set("config-version", 22);
++        version = getInt("config-version", 27);
++        set("config-version", 27);
 +
 +        readConfig(PurpurConfig.class, null);
 +    }
@@ -270,18 +346,17 @@ index 0000000000000000000000000000000000000000..f589e4376f88c7774a7fe999cad4d11a
 +        return builder.build();
 +    }
 +}
-diff --git a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..8bc89d48695c816a1db77f9cdffd05f35afea92a
+index 0000000000000000000000000000000000000000..0ce93836629522c2ff2a57226583009302271daf
 --- /dev/null
-+++ b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-@@ -0,0 +1,96 @@
-+package net.pl3x.purpur;
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -0,0 +1,91 @@
++package org.purpurmc.purpur;
 +
 +import net.minecraft.core.Registry;
 +import net.minecraft.resources.ResourceLocation;
-+import net.minecraft.server.level.ServerLevel;
-+import net.minecraft.world.Difficulty;
++import net.minecraft.util.Mth;
 +import net.minecraft.world.item.DyeColor;
 +import net.minecraft.world.item.Item;
 +import net.minecraft.world.item.Items;
@@ -289,10 +364,10 @@ index 0000000000000000000000000000000000000000..8bc89d48695c816a1db77f9cdffd05f3
 +import net.minecraft.world.level.block.Block;
 +import net.minecraft.world.level.block.Blocks;
 +import net.minecraft.world.level.block.state.properties.Tilt;
-+import net.pl3x.purpur.tool.Strippable;
-+import net.pl3x.purpur.tool.Tillable;
-+import net.pl3x.purpur.tool.Waxable;
-+import net.pl3x.purpur.tool.Weatherable;
++import org.purpurmc.purpur.tool.Strippable;
++import org.purpurmc.purpur.tool.Tillable;
++import org.purpurmc.purpur.tool.Waxable;
++import org.purpurmc.purpur.tool.Weatherable;
 +import org.apache.commons.lang.BooleanUtils;
 +import org.bukkit.ChatColor;
 +import org.bukkit.World;
@@ -300,23 +375,19 @@ index 0000000000000000000000000000000000000000..8bc89d48695c816a1db77f9cdffd05f3
 +
 +import java.util.ArrayList;
 +import java.util.HashMap;
-+import java.util.HashSet;
 +import java.util.List;
 +import java.util.Map;
-+import java.util.Set;
 +import java.util.function.Predicate;
 +import java.util.logging.Level;
-+import static net.pl3x.purpur.PurpurConfig.log;
++import static org.purpurmc.purpur.PurpurConfig.log;
 +
 +@SuppressWarnings("unused")
 +public class PurpurWorldConfig {
 +
-+    private final ServerLevel level;
 +    private final String worldName;
 +    private final World.Environment environment;
 +
-+    public PurpurWorldConfig(ServerLevel level, String worldName, World.Environment environment) {
-+        this.level = level;
++    public PurpurWorldConfig(String worldName, World.Environment environment) {
 +        this.worldName = worldName;
 +        this.environment = environment;
 +        init();
@@ -372,17 +443,17 @@ index 0000000000000000000000000000000000000000..8bc89d48695c816a1db77f9cdffd05f3
 +        return value.isEmpty() ? fallback : value;
 +    }
 +}
-diff --git a/src/main/java/net/pl3x/purpur/command/PurpurCommand.java b/src/main/java/net/pl3x/purpur/command/PurpurCommand.java
+diff --git a/src/main/java/org/purpurmc/purpur/command/PurpurCommand.java b/src/main/java/org/purpurmc/purpur/command/PurpurCommand.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..6e7f56fe2b78d7a09d5d130f2c88338fb8ae628e
+index 0000000000000000000000000000000000000000..afdf04f8b22ad0b7c0b41675e44687b49c2f86d6
 --- /dev/null
-+++ b/src/main/java/net/pl3x/purpur/command/PurpurCommand.java
++++ b/src/main/java/org/purpurmc/purpur/command/PurpurCommand.java
 @@ -0,0 +1,65 @@
-+package net.pl3x.purpur.command;
++package org.purpurmc.purpur.command;
 +
 +import net.minecraft.server.MinecraftServer;
 +import net.minecraft.server.level.ServerLevel;
-+import net.pl3x.purpur.PurpurConfig;
++import org.purpurmc.purpur.PurpurConfig;
 +import org.bukkit.ChatColor;
 +import org.bukkit.Location;
 +import org.bukkit.command.Command;
@@ -443,69 +514,3 @@ index 0000000000000000000000000000000000000000..6e7f56fe2b78d7a09d5d130f2c88338f
 +        return true;
 +    }
 +}
-diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 20111504d88cd10ce68a6b9bfffe5d976b0feb33..665314f2707a6b12a5c2d932681844e6928cd233 100644
---- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-+++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -924,6 +924,7 @@ public final class CraftServer implements Server {
- 
-         org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
-         com.destroystokyo.paper.PaperConfig.init((File) console.options.valueOf("paper-settings")); // Paper
-+        net.pl3x.purpur.PurpurConfig.init((File) console.options.valueOf("purpur-settings")); // Purpur
-         for (ServerLevel world : this.console.getAllLevels()) {
-             // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
-             world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
-@@ -964,6 +965,7 @@ public final class CraftServer implements Server {
-             }
-             world.spigotConfig.init(); // Spigot
-             world.paperConfig.init(); // Paper
-+            world.purpurConfig.init(); // Purpur
-         }
- 
-         Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
-@@ -979,6 +981,7 @@ public final class CraftServer implements Server {
-         this.reloadData();
-         org.spigotmc.SpigotConfig.registerCommands(); // Spigot
-         com.destroystokyo.paper.PaperConfig.registerCommands(); // Paper
-+        net.pl3x.purpur.PurpurConfig.registerCommands(); // Purpur
-         this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
-         this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
- 
-@@ -2571,6 +2574,18 @@ public final class CraftServer implements Server {
-             return com.destroystokyo.paper.PaperConfig.config;
-         }
- 
-+        // Purpur start
-+        @Override
-+        public YamlConfiguration getPurpurConfig() {
-+            return net.pl3x.purpur.PurpurConfig.config;
-+        }
-+
-+        @Override
-+        public java.util.Properties getServerProperties() {
-+            return getProperties().properties;
-+        }
-+        // Purpur end
-+
-         @Override
-         public void restart() {
-             org.spigotmc.RestartCommand.restart();
-diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 22e9dd17f62103c5061435099ce96a3d70d54808..5b527a32f56a82131168879106f76c1f6cbb7b30 100644
---- a/src/main/java/org/bukkit/craftbukkit/Main.java
-+++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -147,6 +147,14 @@ public class Main {
-                         .describedAs("Yml file");
-                 // Paper end
- 
-+                // Purpur Start
-+                acceptsAll(asList("purpur", "purpur-settings"), "File for purpur settings")
-+                    .withRequiredArg()
-+                    .ofType(File.class)
-+                    .defaultsTo(new File("purpur.yml"))
-+                    .describedAs("Yml file");
-+                // Purpur end
-+
-                 // Paper start
-                 acceptsAll(asList("server-name"), "Name of the server")
-                         .withRequiredArg()

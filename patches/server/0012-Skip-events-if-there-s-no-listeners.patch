@@ -5,10 +5,10 @@ Subject: [PATCH] Skip events if there's no listeners
 
 
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
-index 0766f272068248175bc929a145bafaf9efc8978d..528f4d73155f02efb497730f367e10c5366b525f 100644
+index b66afde6851ceaeccb84aea00cdc333dfbf3d4b0..c79c89bab8972a26c7a48f63ad20ac34b0fc8750 100644
 --- a/src/main/java/net/minecraft/commands/Commands.java
 +++ b/src/main/java/net/minecraft/commands/Commands.java
-@@ -380,6 +380,7 @@ public class Commands {
+@@ -391,6 +391,7 @@ public class Commands {
      }
  
      private void runSync(ServerPlayer player, Collection<String> bukkit, RootCommandNode<SharedSuggestionProvider> rootcommandnode) {
@@ -16,7 +16,7 @@ index 0766f272068248175bc929a145bafaf9efc8978d..528f4d73155f02efb497730f367e10c5
          // Paper end - Async command map building
          new com.destroystokyo.paper.event.brigadier.AsyncPlayerSendCommandsEvent<CommandSourceStack>(player.getBukkitEntity(), (RootCommandNode) rootcommandnode, false).callEvent(); // Paper
          PlayerCommandSendEvent event = new PlayerCommandSendEvent(player.getBukkitEntity(), new LinkedHashSet<>(bukkit));
-@@ -392,6 +393,7 @@ public class Commands {
+@@ -403,6 +404,7 @@ public class Commands {
              }
          }
          // CraftBukkit end

@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: draycia <lonelyyordle@gmail.com>
+Date: Tue, 31 Mar 2020 23:48:55 -0700
+Subject: [PATCH] Configurable villager breeding
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+index 5669fab5174b3507f9fbf697277a851f95028a01..0859c541270ad233df1bb9f082af9d4fc3689066 100644
+--- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
++++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+@@ -740,7 +740,7 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
+ 
+     @Override
+     public boolean canBreed() {
+-        return this.foodLevel + this.countFoodPointsInInventory() >= 12 && this.getAge() == 0;
++        return level.purpurConfig.villagerCanBreed && this.foodLevel + this.countFoodPointsInInventory() >= 12 && this.getAge() == 0;
+     }
+ 
+     private boolean hungry() {
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index 398c64a2e9d0ae975b62da93e87c630d776b12fc..3775aec20dbe1d79f76314ca9a6f569d748a2de7 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -94,10 +94,12 @@ public class PurpurWorldConfig {
+     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
+     public int villagerSpawnIronGolemRadius = 0;
+     public int villagerSpawnIronGolemLimit = 0;
++    public boolean villagerCanBreed = true;
+     private void villagerSettings() {
+         villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
+         villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
+         villagerSpawnIronGolemRadius = getInt("mobs.villager.spawn-iron-golem.radius", villagerSpawnIronGolemRadius);
+         villagerSpawnIronGolemLimit = getInt("mobs.villager.spawn-iron-golem.limit", villagerSpawnIronGolemLimit);
++        villagerCanBreed = getBoolean("mobs.villager.can-breed", villagerCanBreed);
+     }
+ }

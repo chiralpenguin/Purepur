@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Mon, 22 Jul 2019 17:32:17 -0500
+Subject: [PATCH] Implement configurable search radius for villagers to spawn
+ iron golems
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/npc/Villager.java b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+index 292dd3d28cc18206daff2c8f0345b4334b511214..5669fab5174b3507f9fbf697277a851f95028a01 100644
+--- a/src/main/java/net/minecraft/world/entity/npc/Villager.java
++++ b/src/main/java/net/minecraft/world/entity/npc/Villager.java
+@@ -1018,6 +1018,7 @@ public class Villager extends AbstractVillager implements ReputationEventHandler
+ 
+     @Nullable
+     private IronGolem trySpawnGolem(ServerLevel world) {
++        if (world.purpurConfig.villagerSpawnIronGolemRadius > 0 && world.getEntitiesOfClass(IronGolem.class, getBoundingBox().inflate(world.purpurConfig.villagerSpawnIronGolemRadius)).size() > world.purpurConfig.villagerSpawnIronGolemLimit) return null; // Purpur
+         BlockPos blockposition = this.blockPosition();
+ 
+         for (int i = 0; i < 10; ++i) {
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index 6f810a756c4b255830e34884615a4905fcd818b6..717e8be4db8554154a1a6713849a48b4c7fe1931 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -87,8 +87,12 @@ public class PurpurWorldConfig {
+ 
+     public int villagerBrainTicks = 1;
+     public boolean villagerUseBrainTicksOnlyWhenLagging = true;
++    public int villagerSpawnIronGolemRadius = 0;
++    public int villagerSpawnIronGolemLimit = 0;
+     private void villagerSettings() {
+         villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
+         villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
++        villagerSpawnIronGolemRadius = getInt("mobs.villager.spawn-iron-golem.radius", villagerSpawnIronGolemRadius);
++        villagerSpawnIronGolemLimit = getInt("mobs.villager.spawn-iron-golem.limit", villagerSpawnIronGolemLimit);
+     }
+ }

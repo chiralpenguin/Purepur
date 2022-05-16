@@ -1,0 +1,48 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Tue, 13 Apr 2021 11:19:35 -0500
+Subject: [PATCH] Piglin portal spawn modifier
+
+Allows changing the modifier for the piglin spawn chance from a portal block
+based on the world difficulty.
+
+For example, with the default vanilla value of 2000 there is a 2 out of 2000 chance
+for a piglin to spawn in a portal block each tick in normal mode.
+
+Equation: random.nextInt(modifier) < difficulty
+
+Difficulties:
+0 - peaceful
+1 - easy
+2 - normal
+3 - hard
+
+diff --git a/src/main/java/net/minecraft/world/level/block/NetherPortalBlock.java b/src/main/java/net/minecraft/world/level/block/NetherPortalBlock.java
+index 82c132bc90381aab6a29d50319ff40e7383eb7f2..de08662567b84fd9e35c2391b0392b638dfd686d 100644
+--- a/src/main/java/net/minecraft/world/level/block/NetherPortalBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/NetherPortalBlock.java
+@@ -55,7 +55,7 @@ public class NetherPortalBlock extends Block {
+ 
+     @Override
+     public void randomTick(BlockState state, ServerLevel world, BlockPos pos, Random random) {
+-        if (world.spigotConfig.enableZombiePigmenPortalSpawns && world.dimensionType().natural() && world.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING) && random.nextInt(2000) < world.getDifficulty().getId()) { // Spigot
++        if (world.spigotConfig.enableZombiePigmenPortalSpawns && world.dimensionType().natural() && world.getGameRules().getBoolean(GameRules.RULE_DOMOBSPAWNING) && random.nextInt(world.purpurConfig.piglinPortalSpawnModifier) < world.getDifficulty().getId()) { // Spigot // Purpur
+             while (world.getBlockState(pos).is((Block) this)) {
+                 pos = pos.below();
+             }
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index 3c484693aab8d65febeed7e23169268f3cac9dbb..c97fc6caf5630aa381278e0047fd7e57b401ad9d 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -120,6 +120,11 @@ public class PurpurWorldConfig {
+         witherSkullDespawnRate = getInt("gameplay-mechanics.projectile-despawn-rates.wither_skull", witherSkullDespawnRate);
+     }
+ 
++    public int piglinPortalSpawnModifier = 2000;
++    private void piglinSettings() {
++        piglinPortalSpawnModifier = getInt("mobs.piglin.portal-spawn-modifier", piglinPortalSpawnModifier);
++    }
++
+     public boolean squidImmuneToEAR = true;
+     private void squidSettings() {
+         squidImmuneToEAR = getBoolean("mobs.squid.immune-to-EAR", squidImmuneToEAR);

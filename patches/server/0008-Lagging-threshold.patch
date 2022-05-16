@@ -5,44 +5,30 @@ Subject: [PATCH] Lagging threshold
 
 
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index e172e80cd0ba862f2a532d0935c0dd369924f9fd..422c4e547d2c1fb4f711aa6952f4434ddd96e86e 100644
+index 7bf712315ec8882a124cdfcca20c615bf56df5ab..07f2a8a87a0824b86b9615947fc468a51c254cc6 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -306,6 +306,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
-     public static final int TICK_TIME = 1000000000 / MinecraftServer.TPS;
-     private static final int SAMPLE_INTERVAL = 20; // Paper
+@@ -305,6 +305,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      public final double[] recentTps = new double[ 3 ];
-+    public boolean lagging = false; // Purpur
-     public final SlackActivityAccountant slackActivityAccountant = new SlackActivityAccountant();
      // Spigot end
      public static long currentTickLong = 0L; // Paper
-@@ -1265,6 +1266,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
++    public boolean lagging = false; // Purpur
+ 
+     public volatile Thread shutdownThread; // Paper
+     public volatile boolean abnormalExit = false; // Paper
+@@ -1210,6 +1211,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                          this.recentTps[1] = tps5.getAverage();
                          this.recentTps[2] = tps15.getAverage();
                          // Paper end
-+                        lagging = recentTps[0] < net.pl3x.purpur.PurpurConfig.laggingThreshold; // Purpur
++                        lagging = recentTps[0] < org.purpurmc.purpur.PurpurConfig.laggingThreshold; // Purpur
                          tickSection = curTime;
                      }
                      // Spigot end
-diff --git a/src/main/java/net/pl3x/purpur/PurpurConfig.java b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-index e246c1938c8a0f730fec595169d6434f65202caa..52874b2e853ff3f2681c5986e7b2441b9dd4441c 100644
---- a/src/main/java/net/pl3x/purpur/PurpurConfig.java
-+++ b/src/main/java/net/pl3x/purpur/PurpurConfig.java
-@@ -174,4 +174,9 @@ public class PurpurConfig {
-         }
-         if (!co.aikar.timings.TimingsManager.hiddenConfigs.contains("server-ip")) co.aikar.timings.TimingsManager.hiddenConfigs.add("server-ip");
-     }
-+
-+    public static double laggingThreshold = 19.0D;
-+    private static void tickLoopSettings() {
-+        laggingThreshold = getDouble("settings.lagging-threshold", laggingThreshold);
-+    }
- }
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 2c52a8d73c14213bc6357944b117324b567eb33f..f222143ab5ca659b65cd93560e32ea78866a8d9a 100644
+index a6f170413a486efb2d48af55604b130782f4f157..b62e5ce31a0a259e2abd96252598f91935ef6c4a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -2746,5 +2746,10 @@ public final class CraftServer implements Server {
+@@ -2899,5 +2899,10 @@ public final class CraftServer implements Server {
      public String getServerName() {
          return this.getProperties().serverName;
      }
@@ -52,4 +38,18 @@ index 2c52a8d73c14213bc6357944b117324b567eb33f..f222143ab5ca659b65cd93560e32ea78
 +        return getServer().lagging;
 +    }
      // Purpur end
+ }
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurConfig.java b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+index 2874958cc3d8b600ddd2efa51250df629ff44a3a..0824eb8fcf9f196e8b3635f2e9424f081e45d26b 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+@@ -171,4 +171,9 @@ public class PurpurConfig {
+      private static void serverModName() {
+         serverModName = getString("settings.server-mod-name", serverModName);
+      }
++
++    public static double laggingThreshold = 19.0D;
++    private static void tickLoopSettings() {
++        laggingThreshold = getDouble("settings.lagging-threshold", laggingThreshold);
++    }
  }

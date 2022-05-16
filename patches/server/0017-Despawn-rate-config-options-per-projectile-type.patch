@@ -6,7 +6,7 @@ Subject: [PATCH] Despawn rate config options per projectile type
 Default values of -1 respect vanilla behaviour.
 
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java b/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
-index 52e4948fd1657fa1776ac6b0142e8c21e7567976..da76e07b3caced3172ecade96a67aca81958a4dc 100644
+index 53d0024daf6963ac4dab575666b0d6a74a39a958..2772351085add7d25c39bd9e5537fe354d07e9e1 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/AbstractArrow.java
 @@ -62,7 +62,7 @@ public abstract class AbstractArrow extends Projectile {
@@ -18,7 +18,7 @@ index 52e4948fd1657fa1776ac6b0142e8c21e7567976..da76e07b3caced3172ecade96a67aca8
      private double baseDamage;
      public int knockback;
      private SoundEvent soundEvent;
-@@ -320,12 +320,23 @@ public abstract class AbstractArrow extends Projectile {
+@@ -333,12 +333,23 @@ public abstract class AbstractArrow extends Projectile {
  
      }
  
@@ -63,10 +63,10 @@ index 6afe37e42d88701af38df5793a9ea9d7d2cda5c5..1de27407c92d496715899fcafb3794df
 +    // Purpur end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/FireworkRocketEntity.java b/src/main/java/net/minecraft/world/entity/projectile/FireworkRocketEntity.java
-index 3ac0d0419cbdacabf647a530a82ddf67ddaa13b7..78111e7c26f5237e9954791cf17037eb6fd111b2 100644
+index 5a062a19bb2fc427c9391bb4731f071719b72c52..001d252763a689351a4df2ef830b3abb85a09e16 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/FireworkRocketEntity.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/FireworkRocketEntity.java
-@@ -355,4 +355,11 @@ public class FireworkRocketEntity extends Projectile implements ItemSupplier {
+@@ -358,4 +358,11 @@ public class FireworkRocketEntity extends Projectile implements ItemSupplier {
      public boolean isAttackable() {
          return false;
      }
@@ -79,10 +79,10 @@ index 3ac0d0419cbdacabf647a530a82ddf67ddaa13b7..78111e7c26f5237e9954791cf17037eb
 +    // Purpur end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
-index 5c16566f59535ce61fb3f747a745255cfaa439e8..dc7968c3bcf72af22fffbc85b058ac5820f06453 100644
+index 3789a0db398766f0fbc9e5ac5bf4228a0a0dac88..475ff3c62796306694c76ca5315cd27d2cbe8fbe 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/FishingHook.java
-@@ -664,4 +664,11 @@ public class FishingHook extends Projectile {
+@@ -661,4 +661,11 @@ public class FishingHook extends Projectile {
  
          private OpenWaterType() {}
      }
@@ -111,7 +111,7 @@ index 5237b699e000b4fed99be39b0a7e2daab9c8bf42..e69213b43c8aa5a7c04add7a87482d53
 +    // Purpur end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/LlamaSpit.java b/src/main/java/net/minecraft/world/entity/projectile/LlamaSpit.java
-index 85a509e4fc0e4b9f182585e17b7deab2fea7e6c0..2a4b5e1f2c8510a2990ba2402e673b024d20bbc2 100644
+index 4132c1113f5437a776e5e3c1cb306904775aed88..24149c4cfbc865780999318f09afb2a66cfbf4ff 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/LlamaSpit.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/LlamaSpit.java
 @@ -94,4 +94,11 @@ public class LlamaSpit extends Projectile {
@@ -127,7 +127,7 @@ index 85a509e4fc0e4b9f182585e17b7deab2fea7e6c0..2a4b5e1f2c8510a2990ba2402e673b02
 +    // Purpur end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
-index 461173191361fdb0c2c950eacf03ba43693e1908..a18095be099f9d14a9bf5442f58c5d2edc31cdc2 100644
+index 0c7d31c7ffd603e54fb19010331ad220c7b15627..73d18318afff5eac5966ddaeadf014524d06ec66 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/Projectile.java
 @@ -33,6 +33,7 @@ public abstract class Projectile extends Entity {
@@ -137,10 +137,10 @@ index 461173191361fdb0c2c950eacf03ba43693e1908..a18095be099f9d14a9bf5442f58c5d2e
 +    public int life; // Purpur - moved from AbstractArrow
  
      // CraftBukkit start
-     private boolean hitCancelled = false;
+     protected boolean hitCancelled = false;
 @@ -72,6 +73,19 @@ public abstract class Projectile extends Entity {
      }
-     // Airplane start
+     // Pufferfish start
  
 +    // Purpur start
 +    protected final void tickDespawnCounter() {
@@ -159,10 +159,10 @@ index 461173191361fdb0c2c950eacf03ba43693e1908..a18095be099f9d14a9bf5442f58c5d2e
          if (entity != null) {
              this.ownerUUID = entity.getUUID();
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/ShulkerBullet.java b/src/main/java/net/minecraft/world/entity/projectile/ShulkerBullet.java
-index 123f9a93b014107c8f609d38a2b8d37261bb5d18..aa91cc06f6411fe83467e43c0df1145cb85aead0 100644
+index a4591e4dc1a277a2fd0a323f3b54a107fd6598c8..ca0133bcb82df8112b63c7aef3670a8970676ef9 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/ShulkerBullet.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/ShulkerBullet.java
-@@ -63,6 +63,13 @@ public class ShulkerBullet extends Projectile {
+@@ -62,6 +62,13 @@ public class ShulkerBullet extends Projectile {
          projectileSource = (org.bukkit.entity.LivingEntity) owner.getBukkitEntity(); // CraftBukkit
      }
  
@@ -177,10 +177,10 @@ index 123f9a93b014107c8f609d38a2b8d37261bb5d18..aa91cc06f6411fe83467e43c0df1145c
      public Entity getTarget() {
          return this.finalTarget;
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/SmallFireball.java b/src/main/java/net/minecraft/world/entity/projectile/SmallFireball.java
-index b77d04ef22711a4f90e274e81faa261f3f6c25af..a6d75f20d6b7679d53c3c081c6632e9c303e2d74 100644
+index 58354671480ce3e677790eb5bebc64a20b36e43d..226b33921c90ca3904a7397a68dc8169948f8faa 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/SmallFireball.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/SmallFireball.java
-@@ -99,4 +99,11 @@ public class SmallFireball extends Fireball {
+@@ -98,4 +98,11 @@ public class SmallFireball extends Fireball {
      public boolean hurt(DamageSource source, float amount) {
          return false;
      }
@@ -225,10 +225,10 @@ index 77941e3981e49cf5662b3e3c86a9c419080b17c8..8c6243aab556c993b43ab52e216bcb0a
 +    // Purpur end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/ThrownEnderpearl.java b/src/main/java/net/minecraft/world/entity/projectile/ThrownEnderpearl.java
-index 1b2ada3663cc0739782ac591f2ee1f6d0fb94841..6599f267e30d15ad179e98d3683273cd9bbc3bd0 100644
+index 23f77dfc6df93ef6a70e14a7e410263d39fae2cb..22d5f5aac2f4c7ce8f490d4851ef3d637a9c7d06 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/ThrownEnderpearl.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/ThrownEnderpearl.java
-@@ -131,4 +131,11 @@ public class ThrownEnderpearl extends ThrowableItemProjectile {
+@@ -121,4 +121,11 @@ public class ThrownEnderpearl extends ThrowableItemProjectile {
  
          return super.changeDimension(destination);
      }
@@ -241,7 +241,7 @@ index 1b2ada3663cc0739782ac591f2ee1f6d0fb94841..6599f267e30d15ad179e98d3683273cd
 +    // Purpur end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/ThrownExperienceBottle.java b/src/main/java/net/minecraft/world/entity/projectile/ThrownExperienceBottle.java
-index 11d1db5ef709dfb6fa596ebc4f5fff1415ad4f6d..ef771a190c6a437d4cf741a6d5a3be88070e011d 100644
+index dcbbff3a8dfcac869f07025e0e8e3d9c47956093..d6b522aa7c7ce87caf55f91ee9d661e055506c01 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/ThrownExperienceBottle.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/ThrownExperienceBottle.java
 @@ -56,4 +56,11 @@ public class ThrownExperienceBottle extends ThrowableItemProjectile {
@@ -257,10 +257,10 @@ index 11d1db5ef709dfb6fa596ebc4f5fff1415ad4f6d..ef771a190c6a437d4cf741a6d5a3be88
 +    // Purpur end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/ThrownPotion.java b/src/main/java/net/minecraft/world/entity/projectile/ThrownPotion.java
-index 8676796ff65cd0bd3f215dc7edcf3a5b2291ca27..15e7c19093e74a3354a115074449c1f6a830afc9 100644
+index fee09e6ff72cf1da389d5811dd005642cd50a5b4..0f387c4f6fb49c5266feeec3504a4ec7c870ba37 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/ThrownPotion.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/ThrownPotion.java
-@@ -303,4 +303,11 @@ public class ThrownPotion extends ThrowableItemProjectile implements ItemSupplie
+@@ -305,4 +305,11 @@ public class ThrownPotion extends ThrowableItemProjectile implements ItemSupplie
          }
  
      }
@@ -273,7 +273,7 @@ index 8676796ff65cd0bd3f215dc7edcf3a5b2291ca27..15e7c19093e74a3354a115074449c1f6
 +    // Purpur end
  }
 diff --git a/src/main/java/net/minecraft/world/entity/projectile/WitherSkull.java b/src/main/java/net/minecraft/world/entity/projectile/WitherSkull.java
-index 4a11f7417b438ee5711a720aca3321c88e970b2a..46b74271ce5f614f07754db14d2a552c36f73226 100644
+index 2867e841e73a3edfdeb83af9d96e0d0cd4116a68..8613008090a9d7cf5cd7c2a598f2c725b5b0cdc6 100644
 --- a/src/main/java/net/minecraft/world/entity/projectile/WitherSkull.java
 +++ b/src/main/java/net/minecraft/world/entity/projectile/WitherSkull.java
 @@ -136,4 +136,11 @@ public class WitherSkull extends AbstractHurtingProjectile {
@@ -288,11 +288,37 @@ index 4a11f7417b438ee5711a720aca3321c88e970b2a..46b74271ce5f614f07754db14d2a552c
 +    }
 +    // Purpur end
  }
-diff --git a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-index 0f83284817075a4ce1e326f1cefccffd00e2d022..c2a11f3296460d2d08e8185d6c3084d4f6ceba67 100644
---- a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-+++ b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-@@ -94,6 +94,35 @@ public class PurpurWorldConfig {
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurConfig.java b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+index 981a963aa9398d6195fe50e93b94c49921ff427c..44e1e639deb3244ad6a7db697132d23144fbd142 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+@@ -176,7 +176,7 @@ public class PurpurConfig {
+     private static void tickLoopSettings() {
+         laggingThreshold = getDouble("settings.lagging-threshold", laggingThreshold);
+     }
+-    
++
+     public static boolean disableMushroomBlockUpdates = false;
+     public static boolean disableNoteBlockUpdates = false;
+     public static boolean disableChorusPlantUpdates = false;
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index 3775aec20dbe1d79f76314ca9a6f569d748a2de7..ce079b6033d8b89efbc7088a216ee56c151c802a 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -64,6 +64,12 @@ public class PurpurWorldConfig {
+         return PurpurConfig.config.getBoolean("world-settings." + worldName + "." + path, PurpurConfig.config.getBoolean("world-settings.default." + path));
+     }
+ 
++    private boolean getBoolean(String path, Predicate<Boolean> predicate) {
++        String val = getString(path, "default").toLowerCase();
++        Boolean bool = BooleanUtils.toBooleanObject(val, "true", "false", "default");
++        return predicate.test(bool);
++    }
++
+     private double getDouble(String path, double def) {
+         PurpurConfig.config.addDefault("world-settings.default." + path, def);
+         return PurpurConfig.config.getDouble("world-settings." + worldName + "." + path, PurpurConfig.config.getDouble("world-settings.default." + path));
+@@ -85,6 +91,35 @@ public class PurpurWorldConfig {
          return value.isEmpty() ? fallback : value;
      }
  

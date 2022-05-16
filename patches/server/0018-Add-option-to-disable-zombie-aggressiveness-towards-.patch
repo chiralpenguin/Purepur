@@ -21,10 +21,10 @@ index 181abe014baba9ac51064c003381281a8fa43fe4..cfd1dcec3efcd4caf2431cbda99bc9f1
          ignored.add("goal_selector_1");
          ignored.add("goal_selector_2");
 diff --git a/src/main/java/net/minecraft/world/entity/monster/Drowned.java b/src/main/java/net/minecraft/world/entity/monster/Drowned.java
-index 275275f4f167522126dc1dc6128716c87f71a4d9..a6ee93e53b46109ea5df325ecf8e38c39a436f3b 100644
+index 030ddefe45563bdd0a7091ae60d365f9aa58b6fc..57f256612e0b383890efc77ad77169946682dd39 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/Drowned.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/Drowned.java
-@@ -79,7 +79,19 @@ public class Drowned extends Zombie implements RangedAttackMob {
+@@ -77,7 +77,19 @@ public class Drowned extends Zombie implements RangedAttackMob {
          this.goalSelector.addGoal(7, new RandomStrollGoal(this, 1.0D));
          this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Drowned.class)).setAlertOthers(ZombifiedPiglin.class));
          this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::okTarget));
@@ -46,10 +46,10 @@ index 275275f4f167522126dc1dc6128716c87f71a4d9..a6ee93e53b46109ea5df325ecf8e38c3
          this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Axolotl.class, true, false));
          this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Turtle.class, 10, true, false, Turtle.BABY_ON_LAND_SELECTOR));
 diff --git a/src/main/java/net/minecraft/world/entity/monster/Zombie.java b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
-index 8da494792786fd80be50efc4cbb56caeae18d004..2fb8fdf3c41d2ca312fb71d7af80b13dd3c4144b 100644
+index cd88413f30632307faba63572915656b6a8469f7..0183ea46caf9846e0466e37485b47735d9a9451c 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/Zombie.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
-@@ -121,7 +121,19 @@ public class Zombie extends Monster {
+@@ -118,7 +118,19 @@ public class Zombie extends Monster {
          this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
          this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, new Class[0])).setAlertOthers(ZombifiedPiglin.class));
          this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
@@ -70,13 +70,13 @@ index 8da494792786fd80be50efc4cbb56caeae18d004..2fb8fdf3c41d2ca312fb71d7af80b13d
          this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
          this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Turtle.class, 10, true, false, Turtle.BABY_ON_LAND_SELECTOR));
      }
-diff --git a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-index c2a11f3296460d2d08e8185d6c3084d4f6ceba67..a0237fbe203d0b0690a29f0dcf8fc00e6256afca 100644
---- a/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-+++ b/src/main/java/net/pl3x/purpur/PurpurWorldConfig.java
-@@ -134,4 +134,9 @@ public class PurpurWorldConfig {
-         villagerBrainTicks = getInt("mobs.villager.brain-ticks", villagerBrainTicks);
-         villagerUseBrainTicksOnlyWhenLagging = getBoolean("mobs.villager.use-brain-ticks-only-when-lagging", villagerUseBrainTicksOnlyWhenLagging);
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index ce079b6033d8b89efbc7088a216ee56c151c802a..0f2a523a5b0fadf6d19a03ec4b497babc263bc42 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -137,4 +137,9 @@ public class PurpurWorldConfig {
+         villagerSpawnIronGolemLimit = getInt("mobs.villager.spawn-iron-golem.limit", villagerSpawnIronGolemLimit);
+         villagerCanBreed = getBoolean("mobs.villager.can-breed", villagerCanBreed);
      }
 +
 +    public boolean zombieAggressiveTowardsVillagerWhenLagging = true;

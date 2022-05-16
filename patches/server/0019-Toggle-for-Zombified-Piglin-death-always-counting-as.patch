@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jason Penilla <11360596+jpenilla@users.noreply.github.com>
+Date: Sat, 5 Dec 2020 02:34:22 -0800
+Subject: [PATCH] Toggle for Zombified Piglin death always counting as player
+ kill when angry
+
+In Vanilla (as of 1.16.4), when Zombified Piglins die while angry, it will
+count as a player kill regardless of whether a player has ever hit them,
+meaning they will drop XP. This is abused in Zombified Piglin farms where
+the player kills the entities through cramming, but they still drop XP due
+to the Piglin being angry, even though the player never hit them.
+
+This patch adds a toggle to disable this behavior.
+
+diff --git a/src/main/java/net/minecraft/world/entity/monster/ZombifiedPiglin.java b/src/main/java/net/minecraft/world/entity/monster/ZombifiedPiglin.java
+index 6fe49abb9d9a273787828e72061e16a7b053e50a..7935d42992dfcaa2479825bf39af1160c7456453 100644
+--- a/src/main/java/net/minecraft/world/entity/monster/ZombifiedPiglin.java
++++ b/src/main/java/net/minecraft/world/entity/monster/ZombifiedPiglin.java
+@@ -106,7 +106,7 @@ public class ZombifiedPiglin extends Zombie implements NeutralMob {
+             this.maybeAlertOthers();
+         }
+ 
+-        if (this.isAngry()) {
++        if (this.isAngry() && this.level.purpurConfig.zombifiedPiglinCountAsPlayerKillWhenAngry) { // Purpur
+             this.lastHurtByPlayerTime = this.tickCount;
+         }
+ 
+@@ -161,7 +161,7 @@ public class ZombifiedPiglin extends Zombie implements NeutralMob {
+             this.ticksUntilNextAlert = ZombifiedPiglin.ALERT_INTERVAL.sample(this.random);
+         }
+ 
+-        if (entityliving instanceof Player) {
++        if (entityliving instanceof Player && this.level.purpurConfig.zombifiedPiglinCountAsPlayerKillWhenAngry) { // Purpur
+             this.setLastHurtByPlayer((Player) entityliving);
+         }
+ 
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index 0f2a523a5b0fadf6d19a03ec4b497babc263bc42..3c484693aab8d65febeed7e23169268f3cac9dbb 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -142,4 +142,9 @@ public class PurpurWorldConfig {
+     private void zombieSettings() {
+         zombieAggressiveTowardsVillagerWhenLagging = getBoolean("mobs.zombie.aggressive-towards-villager-when-lagging", zombieAggressiveTowardsVillagerWhenLagging);
+     }
++
++    public boolean zombifiedPiglinCountAsPlayerKillWhenAngry = true;
++    private void zombifiedPiglinSettings() {
++        zombifiedPiglinCountAsPlayerKillWhenAngry = getBoolean("mobs.zombified_piglin.count-as-player-kill-when-angry", zombifiedPiglinCountAsPlayerKillWhenAngry);
++    }
+ }
