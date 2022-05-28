@@ -45,7 +45,7 @@ index 9521971e9e597834e785b36d1657064dc1621b9b..655f4d84a9522b7af5f3fd234d879775
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index ece77f5ea4b14bbed7c070131b3251ea86764538..4f03efb6d2b0e5390d412e4a256e3f86b9563b6d 100644
+index bf42969859545a8a520923ef1836ffa4a5cc24a0..4f03efb6d2b0e5390d412e4a256e3f86b9563b6d 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 @@ -4,6 +4,7 @@ import com.destroystokyo.paper.util.VersionFetcher;
@@ -124,7 +124,7 @@ index ece77f5ea4b14bbed7c070131b3251ea86764538..4f03efb6d2b0e5390d412e4a256e3f86
          if (siteApiVersion == null) { return -1; }
          try {
              try (BufferedReader reader = Resources.asCharSource(
--                new URL("https://papermc.io/api/v2/projects/paper/versions/" + siteApiVersion),
+-                new URL("https://api.papermc.io/v2/projects/paper/versions/" + siteApiVersion),
 +                new URL("https://api.purpurmc.org/v2/purpur/" + siteApiVersion), // Purpur
                  Charsets.UTF_8
              ).openBufferedStream()) {
@@ -221,7 +221,7 @@ index 303b70f0433ff49a3bee2a0d92c41f01aec38bee..5e9fc979daced5dad9977ab12ea019f4
  
      private static final int DEFAULT_SIZE_THRESHOLD = 1024 * 8;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index f4a82b1f2dc26f938d3dcb23ec32f135a1bfd163..a2af4e9b32f9ebfb97255437a7028df8613d0d95 100644
+index ce1ca033b351785fb67304b8933990d7f2f22d29..3dc9927eb159373fa2b66aecf9280e13b7542449 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -249,7 +249,7 @@ import javax.annotation.Nullable; // Paper
@@ -234,7 +234,7 @@ index f4a82b1f2dc26f938d3dcb23ec32f135a1bfd163..a2af4e9b32f9ebfb97255437a7028df8
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/command/CraftConsoleCommandSender.java b/src/main/java/org/bukkit/craftbukkit/command/CraftConsoleCommandSender.java
-index dbff1eda25b02b16ec123515338d470489f3b3c4..e8323ebe0fe877e880bacc5397404839a237052b 100644
+index db77cdee224d14ec91e8d530dd65da51f3661a9c..b8d997dc9ecd11add9eef08fbef94161584f000a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/command/CraftConsoleCommandSender.java
 +++ b/src/main/java/org/bukkit/craftbukkit/command/CraftConsoleCommandSender.java
 @@ -21,7 +21,12 @@ public class CraftConsoleCommandSender extends ServerCommandSender implements Co
@@ -248,15 +248,6 @@ index dbff1eda25b02b16ec123515338d470489f3b3c4..e8323ebe0fe877e880bacc5397404839
 +            this.sendRawMessage(part);
 +        }
 +        // Purpur end
-     }
- 
-     @Override
-@@ -91,7 +96,7 @@ public class CraftConsoleCommandSender extends ServerCommandSender implements Co
-     // Paper start
-     @Override
-     public void sendMessage(final net.kyori.adventure.identity.Identity identity, final net.kyori.adventure.text.Component message, final net.kyori.adventure.audience.MessageType type) {
--        this.sendRawMessage(io.papermc.paper.adventure.PaperAdventure.LEGACY_SECTION_UXRC.serialize(message));
-+        this.sendMessage(io.papermc.paper.adventure.PaperAdventure.LEGACY_SECTION_UXRC.serialize(message)); // Purpur
      }
  
      @Override
@@ -287,7 +278,7 @@ index cdefb2025eedea7e204d70d568adaf1c1ec4c03c..d1526ed7197b883e1d1f07baf285bf5e
                  // (async tasks must live with race-conditions if they attempt to cancel between these few lines of code)
              }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 7e06f263cf618b82f77101ef86d819d5dc37a24e..9d974b535c03ff06f7f01cdd17dc700e3a3f150e 100644
+index f71af7ecad4b6b0328da8cf8c4e5a8e163866e19..f5a490814268949894581b6caeedb53d7588a621 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 @@ -430,7 +430,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
